@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Link, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FireworkCanvas from './FireworkCanvas'
 import Cookies from "js-cookie";
@@ -43,15 +43,19 @@ function InvitedDetail (props: invitedInfo) {
                   日程：令和7年一月二十五日<br />
                   時間：17時から<br />
                   場所：パーティールーム・オンダム<br />
-                  マップ：<a href="https://naver.me/GMm8ttNp" target="_blank">Naver Map</a><br /><br />
+                  マップ：<Link href="https://naver.me/GMm8ttNp" underline='none' target="_blank">Naver Map</Link><br /><br />
 
-                  飲み物とか食べ物は自分で自由に持ってきてください。<br />
+                  飲み物や食べ物は自分で自由に持ってきてください。<br />
                   身分証明書などは必要ありません。<br /><br />
-                  このパーティーについてお問い合わせがある場合は、<br />
-                  以下の連絡先にお問い合わせください。<br /><br />
 
-                  そしてスペシャルゲストが来るかもしれません。<br />
-                  名前は幸運です！<br />
+                  この場所は午後6時から午前7時までです。<br />
+                  開始時刻は午後7時ですが、早く来たら先に入っても大丈夫です。<br /><br />
+
+                  パスワードとかは下の担当者に連絡ください。<br />
+                  ちなみに友達も呼んでも大丈夫ですが、金曜の午後17時までには必ず連絡ください。<br /><br />
+
+                  このパーティーについてお問い合わせがある際は、<br />
+                  以下の連絡先にお問い合わせください。<br /><br />
                   お楽しみに！🎉<br /><br />
 
                   連絡先：010-2649-7023<br />
