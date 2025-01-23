@@ -41,7 +41,8 @@ function InvitedDetail (props: invitedInfo) {
 
                 日程：令和7年一月二十五日<br/>
                 時間：17時から<br/>
-                場所：まだ決めています。
+                場所：パーティールーム・オンダム<br/>
+                マップ：<a href='https://naver.me/GMm8ttNp' target='_blank'>Naver Map</a>
 
             </Typography>
             <Button
@@ -54,7 +55,7 @@ function InvitedDetail (props: invitedInfo) {
                     zIndex: 0,
                 }}
                 onClick={handleValueChanged}
-            >이름 초기화</Button>
+            >名前再設定</Button>
         </>
     );
 }
