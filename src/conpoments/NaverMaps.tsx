@@ -63,7 +63,7 @@ function NaverMaps({
     } else {
       initMap();
     }
-  }, [latitude, longitude]);
+  }, [isMapLoaded]);
 
   return (
     <>

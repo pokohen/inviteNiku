@@ -97,7 +97,8 @@ function InvitedDetail (props: invitedInfo) {
                             alignItems: "center",
                             position: 'relative',
                             zIndex: 0,
-                            textAlign: "center"
+                            textAlign: "center",
+                            marginTop: "12px",
                         }}
                         onClick={handleValueChanged}
                     >名前再設定</Button>
