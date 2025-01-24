@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FireworkCanvas from './FireworkCanvas'
 import Cookies from "js-cookie";
+import NaverMaps from "./NaverMaps";
 
 type invitedInfo = {
     invitedName : string,
@@ -19,7 +20,7 @@ function InvitedDetail (props: invitedInfo) {
 
     return (
         <>
-            <FireworkCanvas />
+            {/* <FireworkCanvas /> */}
             <Box
                 component={"section"}
                 sx={{
@@ -72,6 +73,15 @@ function InvitedDetail (props: invitedInfo) {
                     担当：キム・ジンヒョン<br /><br />
 
                 </Typography>
+                <Box
+                    component={'div'}
+                    sx={{
+                        width: "300px",
+                        height: "300px",
+                    }}
+                > 
+                    <NaverMaps latitude={37.487198183797} longitude={126.93040544686} />
+                </Box>
                 <Box
                     sx={{
                         width: "100%",
