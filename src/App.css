@@ -1,7 +1,6 @@
 body { background-color: #f9f9f9; }
 #root {
   max-width: 1280px;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -24,7 +24,7 @@ function InvitedDetail (props: invitedInfo) {
             <Box
                 component={"section"}
                 sx={{
-                    paddingTop: "220px",
+                    paddingTop: "80px",
                     paddingBottom: "40px",
                     width: '100%',
                     height: 'max-content',
