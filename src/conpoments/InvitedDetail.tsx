@@ -20,7 +20,7 @@ function InvitedDetail (props: invitedInfo) {
 
     return (
         <>
-            {/* <FireworkCanvas /> */}
+            <FireworkCanvas />
             <Box
                 component={"section"}
                 sx={{
