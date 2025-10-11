@@ -45,18 +45,13 @@ export const TestJapaneseInvited = () => {
     localStorage.removeItem('japanese-test-count');
   };
 
-  const handleBackToQuestionCount = () => {
-    setSelectedQuestionCount(null);
-    localStorage.removeItem('japanese-test-count');
-  };
-
   // 테스트 시작 (타입과 문제 수 모두 선택됨)
   if (selectedType && selectedQuestionCount !== null) {
     return (
       <JapaneseTest
         type={selectedType}
         questionCount={selectedQuestionCount}
-        onBackToSelect={selectedType === 'special' ? handleBackToSelect : handleBackToQuestionCount}
+        onBackToSelect={handleBackToSelect}
       />
     );
   }

@@ -111,11 +111,11 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
         </div>
 
         <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginTop: '20px' }}>
-          <button onClick={resetTest} style={{ padding: '10px 20px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px' }}>
-            다시 하기
+          <button onClick={resetTest} style={{ padding: '10px 20px', backgroundColor: 'transparent', color: '#007bff', border: 'none', borderRadius: '5px' }}>
+            다시 풀기
           </button>
           <button onClick={onBackToSelect} style={{ padding: '10px 20px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '5px' }}>
-            선택 화면으로
+            메인 화면으로
           </button>
         </div>
       </div>
