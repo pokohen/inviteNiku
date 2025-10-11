@@ -5,10 +5,11 @@ import { 토로햄전용시험지 } from '@/shared/토로햄전용시험';
 
 interface JapaneseTestProps {
   type: 'hiragana' | 'katakana' | 'special';
+  questionCount: number; // 0이면 전체 문제
   onBackToSelect: () => void;
 }
 
-export function JapaneseTest({ type, onBackToSelect }: JapaneseTestProps) {
+export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTestProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [score, setScore] = useState(0);
@@ -34,8 +35,11 @@ export function JapaneseTest({ type, onBackToSelect }: JapaneseTestProps) {
   useEffect(() => {
     const questionList = Object.keys(characterMap);
     const shuffledQuestions = questionList.sort(() => Math.random() - 0.5);
-    setQuestions(shuffledQuestions);
-  }, [characterMap]);
+
+    // questionCount가 0이면 전체 문제, 아니면 지정된 개수만큼
+    const finalQuestions = questionCount === 0 ? shuffledQuestions : shuffledQuestions.slice(0, questionCount);
+    setQuestions(finalQuestions);
+  }, [characterMap, questionCount]);
 
   useEffect(() => {
     if (questions.length > 0 && currentQuestionIndex < questions.length) {
@@ -77,7 +81,10 @@ export function JapaneseTest({ type, onBackToSelect }: JapaneseTestProps) {
     setIsFinished(false);
     const questionList = Object.keys(characterMap);
     const shuffledQuestions = questionList.sort(() => Math.random() - 0.5);
-    setQuestions(shuffledQuestions);
+
+    // questionCount가 0이면 전체 문제, 아니면 지정된 개수만큼
+    const finalQuestions = questionCount === 0 ? shuffledQuestions : shuffledQuestions.slice(0, questionCount);
+    setQuestions(finalQuestions);
   };
 
   if (isFinished) {
