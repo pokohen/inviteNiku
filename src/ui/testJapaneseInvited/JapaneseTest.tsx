@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Col, Collapse, Flex, Row } from 'antd';
+import Confetti from 'react-confetti';
 import { hiraganaToKorean } from '@/shared/hiragana';
 import { katakanaToKorean } from '@/shared/katakana';
 import { 토로햄전용시험지 } from '@/shared/토로햄전용시험';
@@ -89,9 +90,32 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
   };
 
   if (isFinished) {
+    const isPerfectScore = score === questions.length;
+
     return (
-      <div style={{ margin: '0 auto', textAlign: 'center', padding: '20px', }}>
+      <div style={{ margin: '0 auto', textAlign: 'center', padding: '20px', position: 'relative', }}>
+        {isPerfectScore && (
+          <Confetti
+            width={window.innerWidth}
+            height={window.innerHeight}
+            recycle={false}
+            numberOfPieces={150}
+            gravity={0.1}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              zIndex: 1000,
+              pointerEvents: 'none'
+            }}
+          />
+        )}
         <h2>{testTitle} 테스트 완료!</h2>
+        {isPerfectScore && (
+          <div style={{ marginTop: '10px', fontSize: '20px', color: '#28a745', fontWeight: 'bold' }}>
+            🎉 すばらしい！100点でした！ 🎉
+          </div>
+        )}
         <Flex justify={'center'} align={'center'} gap={'10px'} style={{ marginTop: '10px', fontSize: '18px' }}>
           <p><span style={{ fontSize: '14px'}}>총 점수 : </span> {score} / {questions.length}</p>
           <div style={{ width: '1px', height: '16px', backgroundColor: '#ccc', borderRadius: '9999px'}}></div>
@@ -100,7 +124,7 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
 
         <Collapse
           style={{ marginTop: '20px', width: '80vw', margin: '0 auto' }}
-          defaultActiveKey={['1', '2']}
+          defaultActiveKey={wrongAnswers.length > 0 ? ['2'] : []}
           expandIconPosition={'end'}
           items={[
             {
