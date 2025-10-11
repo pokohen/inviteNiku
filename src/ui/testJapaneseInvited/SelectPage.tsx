@@ -1,6 +1,7 @@
 interface SelectPageProps {
   onTypeSelect: (type: 'hiragana' | 'katakana' | 'special') => void;
 }
+const correctAnswer = 'totoro';
 
 export const SelectPage = ({ onTypeSelect }: SelectPageProps) => {
   return (
@@ -8,8 +9,11 @@ export const SelectPage = ({ onTypeSelect }: SelectPageProps) => {
       <h1
         style={{ fontSize: '32px', marginBottom: '20px', cursor: 'pointer' }}
         onClick={() => {
-          if (prompt(`해당 시험은 따로 관리하고 있습니다.\n해당 페이지로 이동하기 위해 비밀번호를 입력해주세요.`) === 'totoro') {
+          const correct = prompt(`해당 시험은 따로 관리하고 있습니다.\n해당 페이지로 이동하기 위해 비밀번호를 입력해주세요.`);
+          if (correct === correctAnswer) {
             onTypeSelect('special');
+          } else {
+            alert('비밀번호가 틀렸습니다.');
           }
         }}
       >
