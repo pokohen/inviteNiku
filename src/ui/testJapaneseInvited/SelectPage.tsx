@@ -7,7 +7,11 @@ export const SelectPage = ({ onTypeSelect }: SelectPageProps) => {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', gap: '30px' }}>
       <h1
         style={{ fontSize: '32px', marginBottom: '20px', cursor: 'pointer' }}
-        onClick={() => onTypeSelect('special')}
+        onClick={() => {
+          if (prompt(`해당 시험은 따로 관리하고 있습니다.\n해당 페이지로 이동하기 위해 비밀번호를 입력해주세요.`) === 'totoro') {
+            onTypeSelect('special');
+          }
+        }}
       >
         일본어 히라가나 / 카타카나 테스트
       </h1>
