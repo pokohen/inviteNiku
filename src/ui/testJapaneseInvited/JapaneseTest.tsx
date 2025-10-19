@@ -20,6 +20,7 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
   const [isFinished, setIsFinished] = useState(false);
   const [questions, setQuestions] = useState<string[]>([]);
   const [choices, setChoices] = useState<string[]>([]);
+  const [timeLeft, setTimeLeft] = useState(20 * 60); // 20분 = 1200초
 
   const characterMap = type === 'hiragana' ? hiraganaToKorean :
                       type === 'katakana' ? katakanaToKorean : 토로햄전용시험지;
@@ -51,6 +52,21 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
     }
   }, [questions, currentQuestionIndex, characterMap]);
 
+  useEffect(() => {
+    if (type === 'special' && !isFinished && timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            setIsFinished(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [type, isFinished, timeLeft]);
+
   const currentJapanese = questions[currentQuestionIndex];
   const correctAnswer = characterMap[currentJapanese as keyof typeof characterMap];
 
@@ -81,6 +97,7 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
     setWrongAnswers([]);
     setCorrectAnswers([]);
     setIsFinished(false);
+    setTimeLeft(20 * 60);
     const questionList = Object.keys(characterMap);
     const shuffledQuestions = questionList.sort(() => Math.random() - 0.5);
 
@@ -244,7 +261,7 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
               border: 'none',
               borderRadius: '8px',
               cursor: selectedAnswer !== '' ? 'not-allowed' : 'pointer',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.1s ease'
             }}
           >
             {choice}
