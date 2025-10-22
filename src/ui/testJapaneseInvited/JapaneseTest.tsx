@@ -18,35 +18,14 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
   const [wrongAnswers, setWrongAnswers] = useState<string[]>([]);
   const [correctAnswers, setCorrectAnswers] = useState<string[]>([]);
   const [isFinished, setIsFinished] = useState(false);
-  const [questions, setQuestions] = useState<string[][]>([]);
-  const [choices, setChoices] = useState<string[][]>([]);
+  const [questions, setQuestions] = useState<string[]>([]);
+  const [choices, setChoices] = useState<string[]>([]);
   const [timeLeft, setTimeLeft] = useState(20 * 60); // 20분 = 1200초
-  const [questionTimeLeft, setQuestionTimeLeft] = useState(60); // 1분 = 60초
 
   const characterMap = type === 'hiragana' ? hiraganaToKorean :
                       type === 'katakana' ? katakanaToKorean : 토로햄전용시험지;
   const testTitle = type === 'hiragana' ? '히라가나' :
                     type === 'katakana' ? '가타카나' : '토로햄전용';
-
-  const generateThreeCharacterQuestion = () => {
-    const questionKeys = Object.keys(characterMap);
-    const selectedKeys = questionKeys.sort(() => Math.random() - 0.5).slice(0, 3);
-    return selectedKeys;
-  };
-
-  const generateChoicesForThreeCharacters = (threeJapanese: string[]) => {
-    const correctAnswers = threeJapanese.map(jp => characterMap[jp as keyof typeof characterMap]);
-
-    const allAnswers = Object.values(characterMap);
-    const wrongAnswers = allAnswers.filter(answer => !correctAnswers.includes(answer));
-
-    const shuffledCorrect = [...correctAnswers].sort(() => Math.random() - 0.5);
-    const wrongChoice1 = wrongAnswers.sort(() => Math.random() - 0.5).slice(0, 3);
-    const wrongChoice2 = wrongAnswers.sort(() => Math.random() - 0.5).slice(3, 6);
-    const wrongChoice3 = wrongAnswers.sort(() => Math.random() - 0.5).slice(6, 9);
-
-    return [shuffledCorrect, wrongChoice1, wrongChoice2, wrongChoice3].sort(() => Math.random() - 0.5);
-  };
 
   const generateChoices = (correctAnswer: string) => {
     const allAnswers = Object.values(characterMap);
@@ -57,34 +36,21 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
   };
 
   useEffect(() => {
-    if (type === 'special') {
-      const generatedQuestions: string[][] = [];
-      const count = questionCount === 0 ? Math.floor(Object.keys(characterMap).length / 3) : questionCount;
+    const questionList = Object.keys(characterMap);
+    const shuffledQuestions = questionList.sort(() => Math.random() - 0.5);
 
-      for (let i = 0; i < count; i++) {
-        generatedQuestions.push(generateThreeCharacterQuestion());
-      }
-      setQuestions(generatedQuestions);
-    } else {
-      const questionList = Object.keys(characterMap);
-      const shuffledQuestions = questionList.sort(() => Math.random() - 0.5);
-      const finalQuestions = questionCount === 0 ? shuffledQuestions : shuffledQuestions.slice(0, questionCount);
-      setQuestions(finalQuestions.map(q => [q]));
-    }
-  }, [characterMap, questionCount, type]);
+    // questionCount가 0이면 전체 문제, 아니면 지정된 개수만큼
+    const finalQuestions = questionCount === 0 ? shuffledQuestions : shuffledQuestions.slice(0, questionCount);
+    setQuestions(finalQuestions);
+  }, [characterMap, questionCount]);
 
   useEffect(() => {
     if (questions.length > 0 && currentQuestionIndex < questions.length) {
-      if (type === 'special') {
-        const currentThreeJapanese = questions[currentQuestionIndex];
-        setChoices(generateChoicesForThreeCharacters(currentThreeJapanese));
-      } else {
-        const currentJapanese = questions[currentQuestionIndex][0];
-        const correctAnswer = characterMap[currentJapanese as keyof typeof characterMap];
-        setChoices([generateChoices(correctAnswer)]);
-      }
+      const currentJapanese = questions[currentQuestionIndex];
+      const correctAnswer = characterMap[currentJapanese as keyof typeof characterMap];
+      setChoices(generateChoices(correctAnswer));
     }
-  }, [questions, currentQuestionIndex, characterMap, type]);
+  }, [questions, currentQuestionIndex, characterMap]);
 
   useEffect(() => {
     if (type === 'special' && !isFinished && timeLeft > 0) {
@@ -101,66 +67,17 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
     }
   }, [type, isFinished, timeLeft]);
 
-  useEffect(() => {
-    if (type === 'special' && !isFinished && selectedAnswer === '') {
-      setQuestionTimeLeft(60);
-      const questionTimer = setInterval(() => {
-        setQuestionTimeLeft(prev => {
-          if (prev <= 1) {
-            handleTimeOut();
-            return 60;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      return () => clearInterval(questionTimer);
-    }
-  }, [currentQuestionIndex, type, isFinished, selectedAnswer]);
+  const currentJapanese = questions[currentQuestionIndex];
+  const correctAnswer = characterMap[currentJapanese as keyof typeof characterMap];
 
-  const handleTimeOut = () => {
-    if (type === 'special') {
-      const currentThreeJapanese = questions[currentQuestionIndex];
-      setWrongAnswers([...wrongAnswers, ...currentThreeJapanese]);
+  const handleAnswerSelect = (selectedChoice: string) => {
+    setSelectedAnswer(selectedChoice);
 
-      setTimeout(() => {
-        if (currentQuestionIndex + 1 < questions.length) {
-          setCurrentQuestionIndex(currentQuestionIndex + 1);
-          setSelectedAnswer('');
-        } else {
-          setIsFinished(true);
-        }
-      }, 1000);
-    }
-  };
-
-  const currentJapanese = questions.length > 0 ? questions[currentQuestionIndex] : [];
-  const correctAnswer = type === 'special' && currentJapanese.length > 0
-    ? currentJapanese.map(jp => characterMap[jp as keyof typeof characterMap])
-    : currentJapanese.length > 0
-    ? characterMap[currentJapanese[0] as keyof typeof characterMap]
-    : '';
-
-  const handleAnswerSelect = (selectedChoice: string | string[]) => {
-    setSelectedAnswer(Array.isArray(selectedChoice) ? selectedChoice.join(',') : selectedChoice);
-
-    if (type === 'special') {
-      const isCorrect = Array.isArray(selectedChoice) && Array.isArray(correctAnswer) &&
-        selectedChoice.length === correctAnswer.length &&
-        selectedChoice.every((choice, index) => choice === correctAnswer[index]);
-
-      if (isCorrect) {
-        setScore(score + 1);
-        setCorrectAnswers([...correctAnswers, ...currentJapanese]);
-      } else {
-        setWrongAnswers([...wrongAnswers, ...currentJapanese]);
-      }
+    if (selectedChoice === correctAnswer) {
+      setScore(score + 1);
+      setCorrectAnswers([...correctAnswers, currentJapanese]);
     } else {
-      if (selectedChoice === correctAnswer) {
-        setScore(score + 1);
-        setCorrectAnswers([...correctAnswers, currentJapanese[0]]);
-      } else {
-        setWrongAnswers([...wrongAnswers, currentJapanese[0]]);
-      }
+      setWrongAnswers([...wrongAnswers, currentJapanese]);
     }
 
     setTimeout(() => {
@@ -181,22 +98,12 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
     setCorrectAnswers([]);
     setIsFinished(false);
     setTimeLeft(20 * 60);
-    setQuestionTimeLeft(60);
+    const questionList = Object.keys(characterMap);
+    const shuffledQuestions = questionList.sort(() => Math.random() - 0.5);
 
-    if (type === 'special') {
-      const generatedQuestions: string[][] = [];
-      const count = questionCount === 0 ? Math.floor(Object.keys(characterMap).length / 3) : questionCount;
-
-      for (let i = 0; i < count; i++) {
-        generatedQuestions.push(generateThreeCharacterQuestion());
-      }
-      setQuestions(generatedQuestions);
-    } else {
-      const questionList = Object.keys(characterMap);
-      const shuffledQuestions = questionList.sort(() => Math.random() - 0.5);
-      const finalQuestions = questionCount === 0 ? shuffledQuestions : shuffledQuestions.slice(0, questionCount);
-      setQuestions(finalQuestions.map(q => [q]));
-    }
+    // questionCount가 0이면 전체 문제, 아니면 지정된 개수만큼
+    const finalQuestions = questionCount === 0 ? shuffledQuestions : shuffledQuestions.slice(0, questionCount);
+    setQuestions(finalQuestions);
   };
 
   if (isFinished) {
@@ -261,7 +168,7 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
                             minHeight: '20px'
                           }}
                         >
-                          {japanese ? (type === 'special' ? `${japanese} → ${characterMap[japanese as keyof typeof characterMap]}` : `${japanese} → ${characterMap[japanese as keyof typeof characterMap]}`) : ''}
+                          {japanese ? `${japanese} → ${characterMap[japanese as keyof typeof characterMap]}` : ''}
                         </Col>
                       ));
                     })()
@@ -295,7 +202,7 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
                             minHeight: '20px'
                           }}
                         >
-                          {japanese ? (type === 'special' ? `${japanese} → ${characterMap[japanese as keyof typeof characterMap]}` : `${japanese} → ${characterMap[japanese as keyof typeof characterMap]}`) : ''}
+                          {japanese ? `${japanese} → ${characterMap[japanese as keyof typeof characterMap]}` : ''}
                         </Col>
                       ));
                     })()
@@ -331,54 +238,35 @@ export function JapaneseTest({ type, questionCount, onBackToSelect }: JapaneseTe
       </div>
       <h2 style={{ marginBottom: '20px' }}>{testTitle} 테스트</h2>
       <div style={{ marginBottom: '20px' }}>
-        {type === 'special' ? '아래의 글자들을 순서대로 나열한 선택지를 고르세요.' : '아래의 글자를 보고 맞는 한글을 선택해주세요.'}
+        아래의 글자를 보고 맞는 한글을 선택해주세요.
       </div>
-      {type === 'special' && (
-        <div style={{ marginBottom: '10px', fontSize: '16px', color: '#666' }}>
-          남은 시간: {questionTimeLeft}초
-        </div>
-      )}
       <div style={{ fontSize: '48px', marginBottom: '30px' }}>
-        {type === 'special' && Array.isArray(currentJapanese) ? currentJapanese.join(' ') : currentJapanese}
+        {currentJapanese}
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', maxWidth: '400px', margin: '0 auto' }}>
-        {choices.length > 0 && (type === 'special' ? choices[0] : choices).map((choice, index) => {
-          const choiceValue = type === 'special' ? choice : choice[0];
-          const isSelected = type === 'special'
-            ? selectedAnswer === (Array.isArray(choiceValue) ? choiceValue.join(',') : choiceValue)
-            : selectedAnswer === choiceValue;
-          const isCorrect = type === 'special'
-            ? Array.isArray(correctAnswer) && Array.isArray(choiceValue) &&
-              choiceValue.length === correctAnswer.length &&
-              choiceValue.every((c, i) => c === correctAnswer[i])
-            : choiceValue === correctAnswer;
-
-          return (
-            <button
-              key={index}
-              onClick={() => handleAnswerSelect(choiceValue)}
-              disabled={selectedAnswer !== ''}
-              style={{
-                padding: '15px 20px',
-                fontSize: '18px',
-                backgroundColor: isSelected
-                  ? (isCorrect ? '#28a745' : '#dc3545')
-                  : selectedAnswer !== '' && isCorrect
-                  ? '#28a745'
-                  : '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: selectedAnswer !== '' ? 'not-allowed' : 'pointer',
-                transition: 'all 0.1s ease'
-              }}
-            >
-              {type === 'special' && Array.isArray(choiceValue)
-                ? `${index + 1}. ${choiceValue.join(', ')}`
-                : choiceValue}
-            </button>
-          );
-        })}
+        {choices.map((choice, index) => (
+          <button
+            key={index}
+            onClick={() => handleAnswerSelect(choice)}
+            disabled={selectedAnswer !== ''}
+            style={{
+              padding: '15px 20px',
+              fontSize: '18px',
+              backgroundColor: selectedAnswer === choice
+                ? (choice === correctAnswer ? '#28a745' : '#dc3545')
+                : selectedAnswer !== '' && choice === correctAnswer
+                ? '#28a745'
+                : '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: selectedAnswer !== '' ? 'not-allowed' : 'pointer',
+              transition: 'all 0.1s ease'
+            }}
+          >
+            {choice}
+          </button>
+        ))}
       </div>
 
       <button
