@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { SelectPage } from '@/ui/testJapaneseInvited/SelectPage.tsx';
 import { JapaneseTest } from '@/ui/testJapaneseInvited/JapaneseTest.tsx';
 import { QuestionCountSelect } from '@/ui/testJapaneseInvited/QuestionCountSelect.tsx';
+import { MyVocabulary } from '@/ui/testJapaneseInvited/MyVocabulary.tsx';
 
 export const TestJapaneseInvited = () => {
-  const [selectedType, setSelectedType] = useState<'hiragana' | 'katakana' | 'special' | null>(null);
+  const [selectedType, setSelectedType] = useState<'hiragana' | 'katakana' | 'special' | 'vocabulary' | null>(null);
   const [selectedQuestionCount, setSelectedQuestionCount] = useState<number | null>(null);
   const [isTimeAttack, setIsTimeAttack] = useState<boolean>(false);
 
@@ -13,7 +14,7 @@ export const TestJapaneseInvited = () => {
     const savedCount = localStorage.getItem('japanese-test-count');
     const savedTimeAttack = localStorage.getItem('japanese-test-time-attack');
 
-    if (savedType === 'hiragana' || savedType === 'katakana' || savedType === 'special') {
+    if (savedType === 'hiragana' || savedType === 'katakana' || savedType === 'special' || savedType === 'vocabulary') {
       setSelectedType(savedType);
       if (savedType === 'special') {
         setSelectedQuestionCount(0); // special은 항상 전체 문제
@@ -25,7 +26,7 @@ export const TestJapaneseInvited = () => {
     }
   }, []);
 
-  const handleTypeSelect = (type: 'hiragana' | 'katakana' | 'special') => {
+  const handleTypeSelect = (type: 'hiragana' | 'katakana' | 'special' | 'vocabulary') => {
     setSelectedType(type);
     localStorage.setItem('japanese-test-type', type);
 
@@ -34,6 +35,10 @@ export const TestJapaneseInvited = () => {
       setIsTimeAttack(false); // special은 타임어택 없음
       localStorage.setItem('japanese-test-count', '0');
       localStorage.setItem('japanese-test-time-attack', 'false');
+    } else if (type === 'vocabulary') {
+      // vocabulary는 별도 관리
+      setSelectedQuestionCount(null);
+      setIsTimeAttack(false);
     } else {
       setSelectedQuestionCount(null); // 문제 수 선택 화면으로
       setIsTimeAttack(false);
@@ -63,6 +68,15 @@ export const TestJapaneseInvited = () => {
         type={selectedType}
         questionCount={selectedQuestionCount}
         timeAttack={isTimeAttack}
+        onBackToSelect={handleBackToSelect}
+      />
+    );
+  }
+
+  // 나만의 단어장
+  if (selectedType === 'vocabulary') {
+    return (
+      <MyVocabulary
         onBackToSelect={handleBackToSelect}
       />
     );

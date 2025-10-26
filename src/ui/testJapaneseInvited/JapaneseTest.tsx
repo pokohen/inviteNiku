@@ -2,7 +2,7 @@ import { BasicJapaneseTest } from './BasicJapaneseTest.tsx';
 import { SpecialTest } from './SpecialTest.tsx';
 
 interface JapaneseTestProps {
-  type: 'hiragana' | 'katakana' | 'special';
+  type: 'hiragana' | 'katakana' | 'special' | 'vocabulary';
   questionCount: number; // 0이면 전체 문제
   timeAttack: boolean;
   onBackToSelect: () => void;

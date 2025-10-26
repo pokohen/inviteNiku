@@ -1,5 +1,5 @@
 interface SelectPageProps {
-  onTypeSelect: (type: 'hiragana' | 'katakana' | 'special') => void;
+  onTypeSelect: (type: 'hiragana' | 'katakana' | 'special' | 'vocabulary') => void;
 }
 const correctAnswer = 'totoro';
 
@@ -56,6 +56,30 @@ export const SelectPage = ({ onTypeSelect }: SelectPageProps) => {
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#28a745'}
         >
           가타카나<br/>(カタカナ)
+        </button>
+      </div>
+      <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+        <button
+          onClick={() => onTypeSelect('vocabulary')}
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            padding: '20px 40px',
+            fontSize: '18px',
+            backgroundColor: '#ffc107',
+            color: '#212529',
+            border: 'none',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            fontWeight: '600'
+          }}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e0a800'}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ffc107'}
+        >
+          📚 나만의 단어장
         </button>
       </div>
     </div>
