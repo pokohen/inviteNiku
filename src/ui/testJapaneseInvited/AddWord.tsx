@@ -60,7 +60,7 @@ export const AddWord = ({ onAddWord, onBack }: AddWordProps) => {
             type="text"
             value={japanese}
             onChange={(e) => setJapanese(e.target.value)}
-            placeholder="예: こんにちは"
+            placeholder="예: 先生"
             style={{
               width: '100%',
               padding: '12px 16px',
@@ -90,7 +90,7 @@ export const AddWord = ({ onAddWord, onBack }: AddWordProps) => {
             type="text"
             value={yomikana}
             onChange={(e) => setYomikana(e.target.value)}
-            placeholder="예: こんにちは (한자가 있는 경우만)"
+            placeholder="예: せんせい (한자가 있는 경우만)"
             style={{
               width: '100%',
               padding: '12px 16px',
@@ -127,7 +127,7 @@ export const AddWord = ({ onAddWord, onBack }: AddWordProps) => {
             type="text"
             value={korean}
             onChange={(e) => setKorean(e.target.value)}
-            placeholder="예: 안녕하세요"
+            placeholder="예: 선생님"
             style={{
               width: '100%',
               padding: '12px 16px',
