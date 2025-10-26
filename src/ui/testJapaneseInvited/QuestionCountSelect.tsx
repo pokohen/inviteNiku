@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal } from '@/ui/common/Modal';
+import { Modal } from '@/ui/common/Modal.tsx';
 
 interface QuestionCountSelectProps {
   testType: 'hiragana' | 'katakana';

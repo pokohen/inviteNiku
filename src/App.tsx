@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import { TestJapaneseInvited } from '@/ui/testJapaneseInvited';
+import { TestJapaneseInvited } from '@/ui/testJapaneseInvited/index.tsx';
 import InvitedMain from './conpoments/InvitedMain'
 import Cookies from 'js-cookie'
 import InvitedDetail from './conpoments/InvitedDetail'

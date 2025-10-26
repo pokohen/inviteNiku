@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { SelectPage } from '@/ui/testJapaneseInvited/SelectPage';
-import { JapaneseTest } from '@/ui/testJapaneseInvited/JapaneseTest';
-import { QuestionCountSelect } from '@/ui/testJapaneseInvited/QuestionCountSelect';
+import { SelectPage } from '@/ui/testJapaneseInvited/SelectPage.tsx';
+import { JapaneseTest } from '@/ui/testJapaneseInvited/JapaneseTest.tsx';
+import { QuestionCountSelect } from '@/ui/testJapaneseInvited/QuestionCountSelect.tsx';
 
 export const TestJapaneseInvited = () => {
   const [selectedType, setSelectedType] = useState<'hiragana' | 'katakana' | 'special' | null>(null);

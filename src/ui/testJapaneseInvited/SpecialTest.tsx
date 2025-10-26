@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Col, Collapse, Flex, Row } from 'antd';
 import Confetti from 'react-confetti';
-import { 토로햄전용시험지 } from '@/shared/토로햄전용시험';
+import { 토로햄전용시험지 } from '@/shared/토로햄전용시험.ts';
 
 interface SpecialTestProps {
   questionCount: number;

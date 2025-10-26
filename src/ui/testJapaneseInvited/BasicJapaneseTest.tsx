@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Col, Collapse, Flex, Row } from 'antd';
 import Confetti from 'react-confetti';
-import { hiraganaToKorean } from '@/shared/hiragana';
-import { katakanaToKorean } from '@/shared/katakana';
+import { hiraganaToKorean } from '@/shared/hiragana.ts';
+import { katakanaToKorean } from '@/shared/katakana.ts';
 
 interface BasicJapaneseTestProps {
   type: 'hiragana' | 'katakana';

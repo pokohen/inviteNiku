@@ -1,5 +1,5 @@
-import { BasicJapaneseTest } from './BasicJapaneseTest';
-import { SpecialTest } from './SpecialTest';
+import { BasicJapaneseTest } from './BasicJapaneseTest.tsx';
+import { SpecialTest } from './SpecialTest.tsx';
 
 interface JapaneseTestProps {
   type: 'hiragana' | 'katakana' | 'special';
