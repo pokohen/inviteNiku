@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { AddWord } from './AddWord.tsx';
 import { StudyMode } from './StudyMode.tsx';
 import { VocabularyTest } from './VocabularyTest.tsx';
 import { Modal } from '../common/Modal.tsx';
