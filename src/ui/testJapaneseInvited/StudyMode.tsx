@@ -28,18 +28,22 @@ export const StudyMode = ({ words, onBack, onUpdateWord }: StudyModeProps) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
-        gap: '20px'
+        minHeight: '100dvh',
+        gap: 'clamp(16px, 5vw, 20px)',
+        padding: 'clamp(16px, 5vw, 20px)',
+        textAlign: 'center'
       }}>
-        <h2>학습할 단어가 없습니다</h2>
-        <p style={{ color: '#666', marginBottom: '20px' }}>모든 단어를 완료했거나 등록된 단어가 없습니다.</p>
+        <h2 style={{ fontSize: 'clamp(20px, 6vw, 24px)', lineHeight: '1.3' }}>학습할 단어가 없습니다</h2>
+        <p style={{ color: '#666', marginBottom: 'clamp(16px, 5vw, 20px)', fontSize: 'clamp(14px, 4vw, 16px)', lineHeight: '1.4' }}>모든 단어를 완료했거나 등록된 단어가 없습니다.</p>
         <button onClick={onBack} style={{
-          padding: '10px 20px',
+          padding: 'clamp(8px, 2.5vw, 10px) clamp(16px, 5vw, 20px)',
           backgroundColor: '#6c757d',
           color: 'white',
           border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer'
+          borderRadius: 'clamp(4px, 1.5vw, 5px)',
+          cursor: 'pointer',
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          minHeight: 'clamp(40px, 10vw, 44px)'
         }}>
           돌아가기
         </button>
@@ -74,31 +78,33 @@ export const StudyMode = ({ words, onBack, onUpdateWord }: StudyModeProps) => {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      height: '100vh',
-      gap: '30px',
-      padding: '20px'
+      minHeight: '100dvh',
+      gap: 'clamp(20px, 6vw, 30px)',
+      padding: 'clamp(16px, 5vw, 20px)',
+      overflowX: 'hidden'
     }}>
       <div style={{
         position: 'absolute',
-        top: '20px',
-        right: '20px',
-        fontSize: '16px',
+        top: 'clamp(16px, 5vw, 20px)',
+        right: 'clamp(16px, 5vw, 20px)',
+        fontSize: 'clamp(14px, 4vw, 16px)',
         color: '#666'
       }}>
         {currentIndex + 1} / {shuffledWords.length}
       </div>
 
-      <h1 style={{ fontSize: '32px', marginBottom: '20px' }}>
+      <h1 style={{ fontSize: 'clamp(24px, 8vw, 32px)', marginBottom: 'clamp(16px, 5vw, 20px)', lineHeight: '1.2' }}>
         📖 학습 모드
       </h1>
 
       <div style={{
         backgroundColor: '#f8f9fa',
-        padding: '40px',
-        borderRadius: '16px',
+        padding: 'clamp(24px, 6vw, 40px)',
+        borderRadius: 'clamp(12px, 4vw, 16px)',
         textAlign: 'center',
-        minWidth: '400px',
-        minHeight: '300px',
+        width: '100%',
+        maxWidth: 'min(400px, 90vw)',
+        minHeight: 'clamp(240px, 60vw, 300px)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -109,69 +115,75 @@ export const StudyMode = ({ words, onBack, onUpdateWord }: StudyModeProps) => {
           onClick={toggleCompleted}
           style={{
             position: 'absolute',
-            top: '20px',
-            right: '20px',
-            fontSize: '16px',
+            top: 'clamp(12px, 4vw, 20px)',
+            right: 'clamp(12px, 4vw, 20px)',
+            fontSize: 'clamp(12px, 3.5vw, 16px)',
             backgroundColor: 'transparent',
             color: currentWord.completed ? '#28a745' : '#6c757d',
             border: 'none',
-            borderRadius: '8px',
+            borderRadius: 'clamp(6px, 2vw, 8px)',
             cursor: 'pointer',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            padding: 'clamp(4px, 1vw, 6px) clamp(8px, 2vw, 10px)',
+            minHeight: 'clamp(32px, 8vw, 36px)'
           }}
         >
           {currentWord.completed ? '✅ 완료됨' : '☑️ 완료 표시'}
         </button>
         <div style={{
-          fontSize: '48px',
-          marginBottom: '20px',
+          fontSize: 'clamp(28px, 10vw, 48px)',
+          marginBottom: 'clamp(16px, 5vw, 20px)',
           fontWeight: 'bold',
-          color: '#333'
+          color: '#333',
+          lineHeight: '1.2'
         }}>
           {currentWord.japanese}
         </div>
 
         {currentWord.yomikana && (
           <div style={{
-            fontSize: '20px',
+            fontSize: 'clamp(16px, 5vw, 20px)',
             color: '#666',
-            marginBottom: '20px',
-            fontStyle: 'italic'
+            marginBottom: 'clamp(16px, 5vw, 20px)',
+            fontStyle: 'italic',
+            lineHeight: '1.3'
           }}>
             ({currentWord.yomikana})
           </div>
         )}
 
         <div style={{
-          fontSize: '24px',
+          fontSize: 'clamp(18px, 6vw, 24px)',
           color: showAnswer ? '#28a745' : '#transparent',
           fontWeight: '600',
-          minHeight: '40px',
+          minHeight: 'clamp(48px, 12vw, 60px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: showAnswer ? '#d4edda' : '#fff',
           border: showAnswer ? '2px solid #c3e6cb' : '2px dashed #dee2e6',
-          borderRadius: '8px',
-          padding: '15px',
-          transition: 'all 0.3s ease'
+          borderRadius: 'clamp(6px, 2vw, 8px)',
+          padding: 'clamp(12px, 4vw, 15px)',
+          transition: 'all 0.3s ease',
+          lineHeight: '1.3'
         }}>
           {showAnswer ? currentWord.korean : '답을 보려면 클릭하세요'}
         </div>
 
-        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+        <div style={{ display: 'flex', gap: 'clamp(8px, 3vw, 10px)', marginTop: 'clamp(16px, 5vw, 20px)' }}>
           <button
             onClick={toggleAnswer}
             style={{
               width: '100%',
-              padding: '12px 24px',
-              fontSize: '16px',
+              padding: 'clamp(10px, 3vw, 12px) clamp(20px, 6vw, 24px)',
+              fontSize: 'clamp(14px, 4vw, 16px)',
               backgroundColor: showAnswer ? '#dc3545' : '#007bff',
               color: 'white',
               border: 'none',
-              borderRadius: '8px',
+              borderRadius: 'clamp(6px, 2vw, 8px)',
               cursor: 'pointer',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              minHeight: 'clamp(44px, 11vw, 48px)'
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.backgroundColor = showAnswer ? '#c82333' : '#0056b3';
@@ -187,17 +199,24 @@ export const StudyMode = ({ words, onBack, onUpdateWord }: StudyModeProps) => {
 
       <div style={{
         display: 'flex',
-        gap: '20px',
-        alignItems: 'center'
+        gap: 'clamp(16px, 5vw, 20px)',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        justifyContent: 'center'
       }}>
         <button
           onClick={handlePrevious}
           style={{
             background: 'none',
             border: 'none',
-            fontSize: '14px',
+            fontSize: 'clamp(12px, 3.5vw, 14px)',
             color: '#007bff',
             cursor: 'pointer',
+            padding: 'clamp(8px, 2vw, 10px)',
+            minHeight: 'clamp(36px, 9vw, 40px)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'clamp(4px, 1vw, 6px)'
           }}
           onMouseOver={(e) => {
             e.currentTarget.style.color = '#0056b3';
@@ -210,11 +229,12 @@ export const StudyMode = ({ words, onBack, onUpdateWord }: StudyModeProps) => {
         </button>
 
         <div style={{
-          padding: '8px 16px',
+          padding: 'clamp(6px, 2vw, 8px) clamp(12px, 4vw, 16px)',
           backgroundColor: '#e9ecef',
-          borderRadius: '20px',
-          fontSize: '14px',
-          color: '#495057'
+          borderRadius: 'clamp(16px, 5vw, 20px)',
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          color: '#495057',
+          whiteSpace: 'nowrap'
         }}>
           {currentIndex + 1} / {shuffledWords.length}
         </div>
@@ -224,9 +244,14 @@ export const StudyMode = ({ words, onBack, onUpdateWord }: StudyModeProps) => {
           style={{
             background: 'none',
             border: 'none',
-            fontSize: '14px',
+            fontSize: 'clamp(12px, 3.5vw, 14px)',
             color: '#007bff',
             cursor: 'pointer',
+            padding: 'clamp(8px, 2vw, 10px)',
+            minHeight: 'clamp(36px, 9vw, 40px)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'clamp(4px, 1vw, 6px)'
           }}
           onMouseOver={(e) => {
             e.currentTarget.style.color = '#0056b3';
@@ -241,16 +266,18 @@ export const StudyMode = ({ words, onBack, onUpdateWord }: StudyModeProps) => {
 
       <div style={{
         backgroundColor: '#fff3cd',
-        padding: '15px',
-        borderRadius: '8px',
+        padding: 'clamp(12px, 4vw, 15px)',
+        borderRadius: 'clamp(6px, 2vw, 8px)',
         border: '1px solid #ffeaa7',
         textAlign: 'center',
-        maxWidth: '400px'
+        maxWidth: 'min(400px, 90vw)',
+        width: '100%'
       }}>
         <p style={{
           margin: 0,
-          fontSize: '14px',
-          color: '#856404'
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          color: '#856404',
+          lineHeight: '1.4'
         }}>
           💡 충분히 학습한 후 테스트 모드에서 실력을 확인해보세요!
         </p>
@@ -259,13 +286,14 @@ export const StudyMode = ({ words, onBack, onUpdateWord }: StudyModeProps) => {
       <button
         onClick={onBack}
         style={{
-          marginTop: '20px',
-          padding: '10px 20px',
+          padding: 'clamp(8px, 2.5vw, 10px) clamp(16px, 5vw, 20px)',
           backgroundColor: '#6c757d',
           color: 'white',
           border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer'
+          borderRadius: 'clamp(4px, 1.5vw, 5px)',
+          cursor: 'pointer',
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          minHeight: 'clamp(40px, 10vw, 44px)'
         }}
       >
         단어장으로 돌아가기

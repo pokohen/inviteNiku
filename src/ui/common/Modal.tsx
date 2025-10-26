@@ -60,7 +60,7 @@ export const Modal = ({
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 1000,
-        padding: '20px'
+        padding: window.innerWidth <= 480 ? '8px' : 'clamp(8px, 3vw, 20px)'
       }}
       onClick={handleBackdropClick}
     >
@@ -82,7 +82,9 @@ export const Modal = ({
         {(title || showCloseButton) && (
           <div
             style={{
-              padding: '20px 24px',
+              padding: window.innerWidth <= 480
+                ? '10px 12px'
+                : 'clamp(12px, 4vw, 20px) clamp(16px, 5vw, 24px)',
               borderBottom: '1px solid #e9ecef',
               display: 'flex',
               justifyContent: 'space-between',
@@ -92,9 +94,10 @@ export const Modal = ({
             {title && (
               <h2 style={{
                 margin: 0,
-                fontSize: '20px',
+                fontSize: 'clamp(16px, 5vw, 20px)',
                 fontWeight: '600',
-                color: '#333'
+                color: '#333',
+                lineHeight: '1.2'
               }}>
                 {title}
               </h2>
@@ -105,12 +108,12 @@ export const Modal = ({
                 style={{
                   background: 'none',
                   border: 'none',
-                  fontSize: '24px',
+                  fontSize: 'clamp(20px, 6vw, 24px)',
                   cursor: 'pointer',
                   color: '#6c757d',
                   padding: '0',
-                  width: '30px',
-                  height: '30px',
+                  width: 'clamp(36px, 10vw, 44px)',
+                  height: 'clamp(36px, 10vw, 44px)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -133,7 +136,9 @@ export const Modal = ({
         )}
         <div
           style={{
-            padding: '24px',
+            padding: window.innerWidth <= 480
+              ? '12px'
+              : 'clamp(12px, 4vw, 24px)',
             flex: 1,
             overflow: 'auto'
           }}

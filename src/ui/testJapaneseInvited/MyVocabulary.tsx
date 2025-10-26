@@ -26,6 +26,7 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
   const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(false);
   const [testQuestionCount, setTestQuestionCount] = useState(0);
   const [testTimeAttack, setTestTimeAttack] = useState(false);
+  const [wordFilter, setWordFilter] = useState<'all' | 'incomplete' | 'completed'>('all');
 
   useEffect(() => {
     const savedWords = localStorage.getItem('my-vocabulary');
@@ -78,6 +79,21 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
     setCurrentMode('main');
   };
 
+  const getFilteredWords = () => {
+    switch (wordFilter) {
+      case 'completed':
+        return words.filter(word => word.completed);
+      case 'incomplete':
+        return words.filter(word => !word.completed);
+      default:
+        return words;
+    }
+  };
+
+  const filteredWords = getFilteredWords();
+  const completedCount = words.filter(word => word.completed).length;
+  const incompleteCount = words.length - completedCount;
+
   if (currentMode === 'study') {
     return (
       <StudyMode
@@ -119,66 +135,200 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      height: '100vh',
-      gap: '30px'
+      justifyContent: 'flex-start',
+      minHeight: '100dvh',
+      gap: 'clamp(12px, 4vw, 20px)',
+      padding: 'clamp(16px, 5vw, 20px)',
+      background: 'linear-gradient(135deg, #fef7e0 0%, #fff9e6 100%)',
+      overflowX: 'hidden'
     }}>
-      <h1 style={{ fontSize: '32px', marginBottom: '20px' }}>
-        📚 나만의 단어장
-      </h1>
-
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <p style={{ fontSize: '18px', color: '#666' }}>
-          현재 {words.length}개의 단어가 저장되어 있습니다
-        </p>
+      <div style={{
+        textAlign: 'center',
+        marginBottom: 'clamp(8px, 3vw, 10px)',
+        width: '100%'
+      }}>
+        <h1 style={{
+          fontSize: 'clamp(24px, 8vw, 36px)',
+          marginBottom: 'clamp(4px, 2vw, 8px)',
+          background: 'linear-gradient(45deg, #f57f17, #ff9800)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          fontWeight: 'bold',
+          lineHeight: '1.2'
+        }}>
+          📚 나만의 단어장
+        </h1>
+        <div style={{
+          fontSize: 'clamp(12px, 4vw, 16px)',
+          color: '#8d6e63',
+          fontWeight: '500',
+          lineHeight: '1.4'
+        }}>
+          일본어 학습을 위한 개인 맞춤 단어장
+        </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+      <div style={{
+        backgroundColor: '#fff9c4',
+        padding: 'clamp(16px, 5vw, 20px)',
+        borderRadius: 'clamp(12px, 4vw, 16px)',
+        border: '1px solid #fdd835',
+        margin: '0 auto',
+        boxShadow: '0 4px 12px rgba(245, 127, 23, 0.1)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          right: '0',
+          height: '3px',
+          background: 'linear-gradient(90deg, #fdd835, #ff9800, #fdd835)'
+        }}></div>
+        <div style={{
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          color: '#e65100',
+          textAlign: 'center',
+          lineHeight: '1.6'
+        }}>
+          <div style={{
+            fontWeight: 'bold',
+            marginBottom: 'clamp(8px, 3vw, 12px)',
+            fontSize: 'clamp(13px, 4vw, 15px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 'clamp(4px, 2vw, 8px)'
+          }}>
+            <span style={{ fontSize: 'clamp(16px, 5vw, 18px)' }}>💾</span>
+            저장 위치 안내
+          </div>
+          <div style={{
+            textAlign: 'left',
+            maxWidth: 'min(300px, 100%)',
+            margin: '0 auto'
+          }}>
+            <div style={{ marginBottom: 'clamp(4px, 1.5vw, 6px)', display: 'flex', alignItems: 'flex-start', gap: 'clamp(6px, 2vw, 8px)' }}>
+              <span style={{ color: '#ff9800', fontWeight: 'bold', flexShrink: 0 }}>•</span>
+              <span>단어장은 현재 브라우저에만 저장해요</span>
+            </div>
+            <div style={{ marginBottom: 'clamp(4px, 1.5vw, 6px)', display: 'flex', alignItems: 'flex-start', gap: 'clamp(6px, 2vw, 8px)' }}>
+              <span style={{ color: '#ff9800', fontWeight: 'bold', flexShrink: 0 }}>•</span>
+              <span>다른 컴퓨터나 휴대폰에서는 보이지 않아요</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'clamp(6px, 2vw, 8px)' }}>
+              <span style={{ color: '#ff9800', fontWeight: 'bold', flexShrink: 0 }}>•</span>
+              <span>시크릿 모드에서는 저장되지 않아요</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{
+        textAlign: 'center',
+        marginBottom: 'clamp(16px, 5vw, 25px)',
+        padding: 'clamp(12px, 4vw, 15px)',
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        borderRadius: 'clamp(8px, 3vw, 12px)',
+        border: '1px solid rgba(245, 127, 23, 0.2)',
+        backdropFilter: 'blur(10px)',
+        maxWidth: 'min(200px, 80vw)',
+        margin: '0 auto'
+      }}>
+        <div style={{
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          color: '#8d6e63',
+          marginBottom: 'clamp(2px, 1vw, 4px)'
+        }}>
+          저장된 단어
+        </div>
+        <div style={{
+          fontSize: 'clamp(20px, 6vw, 24px)',
+          fontWeight: 'bold',
+          color: '#e65100'
+        }}>
+          {words.length}개
+        </div>
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))',
+        gap: 'clamp(12px, 4vw, 16px)',
+        maxWidth: 'min(600px, 95vw)',
+        width: '100%'
+      }}>
         <button
           onClick={() => setIsAddWordModalOpen(true)}
           style={{
-            padding: '20px 40px',
-            fontSize: '20px',
-            backgroundColor: '#28a745',
+            padding: 'clamp(16px, 5vw, 20px) clamp(20px, 6vw, 24px)',
+            fontSize: 'clamp(16px, 4.5vw, 18px)',
+            fontWeight: '600',
+            background: 'linear-gradient(135deg, #4caf50, #45a049)',
             color: 'white',
             border: 'none',
-            borderRadius: '12px',
+            borderRadius: 'clamp(12px, 4vw, 16px)',
             cursor: 'pointer',
-            minWidth: '300px',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)',
+            position: 'relative',
+            overflow: 'hidden',
+            minHeight: 'clamp(60px, 15vw, 80px)'
           }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#1e7e34'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#28a745'}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(76, 175, 80, 0.4)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(76, 175, 80, 0.3)';
+          }}
         >
-          ➕ 단어 추가
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'clamp(6px, 2vw, 8px)' }}>
+            <span style={{ fontSize: 'clamp(18px, 5vw, 20px)' }}>➕</span>
+            단어 추가
+          </div>
         </button>
 
         <button
           onClick={() => setCurrentMode('study')}
           disabled={words.length === 0}
           style={{
-            padding: '20px 40px',
-            fontSize: '20px',
-            backgroundColor: words.length === 0 ? '#6c757d' : '#007bff',
+            padding: 'clamp(16px, 5vw, 20px) clamp(20px, 6vw, 24px)',
+            fontSize: 'clamp(16px, 4.5vw, 18px)',
+            fontWeight: '600',
+            background: words.length === 0
+              ? 'linear-gradient(135deg, #9e9e9e, #757575)'
+              : 'linear-gradient(135deg, #2196f3, #1976d2)',
             color: 'white',
             border: 'none',
-            borderRadius: '12px',
+            borderRadius: 'clamp(12px, 4vw, 16px)',
             cursor: words.length === 0 ? 'not-allowed' : 'pointer',
-            minWidth: '300px',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            boxShadow: words.length === 0
+              ? '0 4px 12px rgba(158, 158, 158, 0.3)'
+              : '0 4px 12px rgba(33, 150, 243, 0.3)',
+            opacity: words.length === 0 ? 0.6 : 1,
+            minHeight: 'clamp(60px, 15vw, 80px)'
           }}
           onMouseOver={(e) => {
             if (words.length > 0) {
-              e.currentTarget.style.backgroundColor = '#0056b3';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(33, 150, 243, 0.4)';
             }
           }}
           onMouseOut={(e) => {
             if (words.length > 0) {
-              e.currentTarget.style.backgroundColor = '#007bff';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(33, 150, 243, 0.3)';
             }
           }}
         >
-          📖 학습 모드
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'clamp(6px, 2vw, 8px)' }}>
+            <span style={{ fontSize: 'clamp(18px, 5vw, 20px)' }}>📖</span>
+            학습 모드
+          </div>
         </button>
 
         <button
@@ -193,202 +343,386 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
           }}
           disabled={words.length < 4}
           style={{
-            padding: '20px 40px',
-            fontSize: '20px',
-            backgroundColor: words.length < 4 ? '#6c757d' : '#dc3545',
+            padding: 'clamp(16px, 5vw, 20px) clamp(20px, 6vw, 24px)',
+            fontSize: 'clamp(16px, 4.5vw, 18px)',
+            fontWeight: '600',
+            background: words.length < 4
+              ? 'linear-gradient(135deg, #9e9e9e, #757575)'
+              : 'linear-gradient(135deg, #f44336, #d32f2f)',
             color: 'white',
             border: 'none',
-            borderRadius: '12px',
+            borderRadius: 'clamp(12px, 4vw, 16px)',
             cursor: words.length < 4 ? 'not-allowed' : 'pointer',
-            minWidth: '300px',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            boxShadow: words.length < 4
+              ? '0 4px 12px rgba(158, 158, 158, 0.3)'
+              : '0 4px 12px rgba(244, 67, 54, 0.3)',
+            opacity: words.length < 4 ? 0.6 : 1,
+            minHeight: 'clamp(60px, 15vw, 80px)'
           }}
           onMouseOver={(e) => {
             if (words.length >= 4) {
-              e.currentTarget.style.backgroundColor = '#c82333';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(244, 67, 54, 0.4)';
             }
           }}
           onMouseOut={(e) => {
             if (words.length >= 4) {
-              e.currentTarget.style.backgroundColor = '#dc3545';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(244, 67, 54, 0.3)';
             }
           }}
         >
-          ✍️ 테스트 모드
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'clamp(6px, 2vw, 8px)' }}>
+            <span style={{ fontSize: 'clamp(18px, 5vw, 20px)' }}>✍️</span>
+            테스트 모드
+          </div>
         </button>
       </div>
 
       <button
         onClick={() => setIsWordListModalOpen(true)}
         style={{
-          marginTop: '20px',
-          padding: '15px 30px',
-          fontSize: '16px',
-          backgroundColor: '#6f42c1',
+          marginTop: 'clamp(16px, 5vw, 20px)',
+          padding: 'clamp(12px, 4vw, 16px) clamp(24px, 7vw, 32px)',
+          fontSize: 'clamp(14px, 4vw, 16px)',
+          fontWeight: '500',
+          background: 'linear-gradient(135deg, #9c27b0, #7b1fa2)',
           color: 'white',
           border: 'none',
-          borderRadius: '8px',
+          borderRadius: 'clamp(10px, 3vw, 12px)',
           cursor: 'pointer',
           transition: 'all 0.3s ease',
           display: 'flex',
           alignItems: 'center',
-          gap: '8px'
+          justifyContent: 'center',
+          gap: 'clamp(6px, 2vw, 8px)',
+          boxShadow: '0 4px 12px rgba(156, 39, 176, 0.3)',
+          minHeight: 'clamp(48px, 12vw, 56px)',
+          maxWidth: 'min(320px, 90vw)'
         }}
-        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#5a359a'}
-        onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6f42c1'}
+        onMouseOver={(e) => {
+          e.currentTarget.style.transform = 'translateY(-1px)';
+          e.currentTarget.style.boxShadow = '0 6px 16px rgba(156, 39, 176, 0.4)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(156, 39, 176, 0.3)';
+        }}
       >
         📋 단어 목록 보기 ({words.length}개)
       </button>
 
       {words.length < 4 && words.length > 0 && (
-        <p style={{ fontSize: '14px', color: '#ffc107', textAlign: 'center' }}>
-          테스트 모드는 최소 4개의 단어가 필요합니다
-        </p>
+        <div style={{
+          marginTop: 'clamp(12px, 4vw, 16px)',
+          padding: 'clamp(10px, 3vw, 12px) clamp(16px, 5vw, 20px)',
+          backgroundColor: 'rgba(255, 193, 7, 0.1)',
+          border: '1px solid rgba(255, 193, 7, 0.3)',
+          borderRadius: 'clamp(8px, 2.5vw, 10px)',
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          color: '#f57c00',
+          textAlign: 'center',
+          fontWeight: '500',
+          maxWidth: 'min(320px, 90vw)',
+          lineHeight: '1.4'
+        }}>
+          ⚠️ 테스트 모드는 최소 4개의 단어가 필요합니다
+        </div>
       )}
 
       <button
         onClick={onBackToSelect}
         style={{
-          marginTop: '20px',
-          padding: '10px 20px',
-          backgroundColor: '#6c757d',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer'
+          marginTop: 'clamp(20px, 6vw, 24px)',
+          padding: 'clamp(10px, 3vw, 12px) clamp(20px, 6vw, 24px)',
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          fontWeight: '500',
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          color: '#8d6e63',
+          border: '1px solid rgba(141, 110, 99, 0.3)',
+          borderRadius: 'clamp(8px, 2.5vw, 10px)',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          backdropFilter: 'blur(10px)',
+          minHeight: 'clamp(40px, 10vw, 44px)',
+          maxWidth: 'min(200px, 80vw)'
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+          e.currentTarget.style.transform = 'translateY(-1px)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+          e.currentTarget.style.transform = 'translateY(0)';
         }}
       >
-        메인 화면으로
+        ← 메인 화면으로
       </button>
 
       <Modal
         isOpen={isWordListModalOpen}
-        onClose={() => setIsWordListModalOpen(false)}
+        onClose={() => {
+          setIsWordListModalOpen(false);
+          setWordFilter('all');
+        }}
         title="📋 단어 목록"
-        width="600px"
+        width="min(600px, 95vw)"
       >
         <div>
           {words.length > 0 ? (
             <>
               <div style={{
-                marginBottom: '20px',
-                textAlign: 'center',
-                fontSize: '16px',
-                color: '#666'
+                marginBottom: 'clamp(16px, 4vw, 20px)'
               }}>
-                총 {words.length}개의 단어가 저장되어 있습니다
+                <div style={{
+                  marginBottom: 'clamp(12px, 3vw, 16px)',
+                  textAlign: 'center',
+                  fontSize: 'clamp(14px, 4vw, 16px)',
+                  color: '#666',
+                  lineHeight: '1.4'
+                }}>
+                  총 {words.length}개의 단어 (완료: {completedCount}개, 미완료: {incompleteCount}개)
+                </div>
+
+                <div style={{
+                  display: 'flex',
+                  gap: 'clamp(4px, 1.5vw, 6px)',
+                  marginBottom: 'clamp(12px, 3vw, 16px)',
+                  backgroundColor: '#f8f9fa',
+                  borderRadius: 'clamp(8px, 2.5vw, 10px)',
+                  border: '1px solid #e9ecef'
+                }}>
+                  <button
+                    onClick={() => setWordFilter('all')}
+                    style={{
+                      flex: 1,
+                      padding: 'clamp(8px, 2.5vw, 10px) clamp(12px, 3vw, 16px)',
+                      fontSize: 'clamp(12px, 3.5vw, 14px)',
+                      fontWeight: '600',
+                      background: wordFilter === 'all'
+                        ? 'linear-gradient(135deg, #007bff, #0056b3)'
+                        : 'transparent',
+                      color: wordFilter === 'all' ? 'white' : '#6c757d',
+                      border: 'none',
+                      borderRadius: 'clamp(6px, 2vw, 8px)',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      boxShadow: wordFilter === 'all' ? '0 2px 6px rgba(0, 123, 255, 0.3)' : 'none'
+                    }}
+                  >
+                    전체 ({words.length})
+                  </button>
+                  <button
+                    onClick={() => setWordFilter('incomplete')}
+                    style={{
+                      flex: 1,
+                      padding: 'clamp(8px, 2.5vw, 10px) clamp(12px, 3vw, 16px)',
+                      fontSize: 'clamp(12px, 3.5vw, 14px)',
+                      fontWeight: '600',
+                      background: wordFilter === 'incomplete'
+                        ? 'linear-gradient(135deg, #ffc107, #e0a800)'
+                        : 'transparent',
+                      color: wordFilter === 'incomplete' ? 'white' : '#6c757d',
+                      border: 'none',
+                      borderRadius: 'clamp(6px, 2vw, 8px)',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      boxShadow: wordFilter === 'incomplete' ? '0 2px 6px rgba(255, 193, 7, 0.3)' : 'none'
+                    }}
+                  >
+                    미완료 ({incompleteCount})
+                  </button>
+                  <button
+                    onClick={() => setWordFilter('completed')}
+                    style={{
+                      flex: 1,
+                      padding: 'clamp(8px, 2.5vw, 10px) clamp(12px, 3vw, 16px)',
+                      fontSize: 'clamp(12px, 3.5vw, 14px)',
+                      fontWeight: '600',
+                      background: wordFilter === 'completed'
+                        ? 'linear-gradient(135deg, #28a745, #1e7e34)'
+                        : 'transparent',
+                      color: wordFilter === 'completed' ? 'white' : '#6c757d',
+                      border: 'none',
+                      borderRadius: 'clamp(6px, 2vw, 8px)',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      boxShadow: wordFilter === 'completed' ? '0 2px 6px rgba(40, 167, 69, 0.3)' : 'none'
+                    }}
+                  >
+                    완료 ({completedCount})
+                  </button>
+                </div>
               </div>
 
               <div style={{
-                maxHeight: '400px',
+                maxHeight: 'clamp(300px, 50vh, 400px)',
                 overflowY: 'auto',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '12px'
+                gap: 'clamp(8px, 3vw, 12px)',
+                padding: '2px'
               }}>
-                {words.map((word, index) => (
+                {filteredWords.length > 0 ? filteredWords.map((word, index) => (
                   <div
                     key={word.id}
                     style={{
                       display: 'flex',
+                      flexDirection: 'column',
                       justifyContent: 'space-between',
-                      alignItems: 'center',
-                      padding: '16px',
-                      backgroundColor: '#f8f9fa',
-                      borderRadius: '8px',
-                      border: '1px solid #dee2e6',
-                      transition: 'all 0.2s ease'
+                      alignItems: 'stretch',
+                      padding: 'clamp(14px, 4vw, 18px)',
+                      background: word.completed
+                        ? 'linear-gradient(135deg, #e8f5e8 0%, #f1f8f1 100%)'
+                        : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
+                      borderRadius: 'clamp(8px, 2.5vw, 12px)',
+                      border: word.completed
+                        ? '2px solid #28a745'
+                        : '2px solid #e9ecef',
+                      transition: 'all 0.3s ease',
+                      gap: 'clamp(10px, 3vw, 14px)',
+                      boxShadow: word.completed
+                        ? '0 2px 8px rgba(40, 167, 69, 0.15)'
+                        : '0 2px 8px rgba(0, 0, 0, 0.05)',
+                      position: 'relative',
                     }}
                     onMouseOver={(e) => {
-                      e.currentTarget.style.backgroundColor = '#e9ecef';
-                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = word.completed
+                        ? '0 4px 16px rgba(40, 167, 69, 0.25)'
+                        : '0 4px 16px rgba(0, 0, 0, 0.1)';
                     }}
                     onMouseOut={(e) => {
-                      e.currentTarget.style.backgroundColor = '#f8f9fa';
                       e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = word.completed
+                        ? '0 2px 8px rgba(40, 167, 69, 0.15)'
+                        : '0 2px 8px rgba(0, 0, 0, 0.05)';
                     }}
                   >
                     <div style={{ flex: 1 }}>
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '8px',
-                        marginBottom: '4px'
+                        gap: 'clamp(8px, 2.5vw, 10px)',
+                        marginBottom: 'clamp(6px, 2vw, 8px)',
+                        flexWrap: 'wrap'
                       }}>
                         <span style={{
-                          fontSize: '12px',
-                          color: '#6c757d',
-                          backgroundColor: '#e9ecef',
-                          padding: '2px 6px',
-                          borderRadius: '4px',
-                          minWidth: '20px',
-                          textAlign: 'center'
+                          fontSize: 'clamp(10px, 3vw, 12px)',
+                          color: word.completed ? '#155724' : '#6c757d',
+                          backgroundColor: word.completed ? '#d4edda' : '#e9ecef',
+                          padding: 'clamp(3px, 1vw, 4px) clamp(6px, 2vw, 8px)',
+                          borderRadius: 'clamp(6px, 2vw, 8px)',
+                          minWidth: 'clamp(20px, 5vw, 24px)',
+                          textAlign: 'center',
+                          fontWeight: '600',
+                          border: word.completed ? '1px solid #c3e6cb' : '1px solid #dee2e6'
                         }}>
                           {index + 1}
                         </span>
-                        <div style={{ fontSize: '18px', fontWeight: 'bold' }}>
+                        <div style={{
+                          fontSize: 'clamp(16px, 5vw, 20px)',
+                          fontWeight: '700',
+                          wordBreak: 'break-word',
+                          color: word.completed ? '#155724' : '#212529',
+                          opacity: word.completed ? 0.8 : 1
+                        }}>
                           {word.japanese}
                           {word.yomikana && (
                             <span style={{
-                              fontSize: '14px',
-                              color: '#666',
-                              marginLeft: '8px',
-                              fontWeight: 'normal'
+                              fontSize: 'clamp(12px, 3.5vw, 14px)',
+                              color: word.completed ? '#6c757d' : '#666',
+                              marginLeft: 'clamp(6px, 2vw, 8px)',
+                              fontWeight: 'normal',
+                              fontStyle: 'italic'
                             }}>
                               ({word.yomikana})
                             </span>
                           )}
                         </div>
                       </div>
-                      <div style={{ fontSize: '16px', color: '#495057' }}>
-                        → {word.korean}
+                      <div style={{
+                        fontSize: 'clamp(14px, 4vw, 16px)',
+                        color: '#495057',
+                        wordBreak: 'break-word',
+                        lineHeight: '1.5',
+                        padding: 'clamp(6px, 2vw, 8px) clamp(8px, 2.5vw, 10px)',
+                        backgroundColor: word.completed ? 'rgba(40, 167, 69, 0.05)' : 'rgba(248, 249, 250, 0.8)',
+                        borderRadius: 'clamp(4px, 1.5vw, 6px)',
+                        border: word.completed ? '1px solid rgba(40, 167, 69, 0.2)' : '1px solid rgba(233, 236, 239, 0.5)',
+                        fontWeight: '500'
+                      }}>
+                        💬 {word.korean}
                       </div>
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '8px',
-                        fontSize: '12px',
+                        gap: 'clamp(8px, 2.5vw, 10px)',
+                        fontSize: 'clamp(10px, 3vw, 12px)',
                         color: '#6c757d',
-                        marginTop: '4px'
+                        marginTop: 'clamp(6px, 2vw, 8px)',
+                        flexWrap: 'wrap'
                       }}>
-                        <span>추가일: {word.dateAdded}</span>
+                        <span style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 'clamp(3px, 1vw, 4px)'
+                        }}>
+                          📅 {word.dateAdded}
+                        </span>
                         {word.completed && (
                           <span style={{
                             backgroundColor: '#28a745',
                             color: 'white',
-                            padding: '2px 6px',
-                            borderRadius: '4px',
-                            fontSize: '10px'
+                            padding: 'clamp(2px, 1vw, 3px) clamp(6px, 2vw, 8px)',
+                            borderRadius: 'clamp(6px, 2vw, 8px)',
+                            fontSize: 'clamp(9px, 2.5vw, 10px)',
+                            fontWeight: '600',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 'clamp(2px, 1vw, 3px)',
+                            boxShadow: '0 1px 3px rgba(40, 167, 69, 0.3)'
                           }}>
-                            ✅ 완료됨
+                            ✅ 학습완료
                           </span>
                         )}
                       </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '8px', marginLeft: '16px' }}>
+                    <div style={{
+                      display: 'flex',
+                      gap: 'clamp(6px, 2vw, 8px)',
+                      justifyContent: 'stretch',
+                      flexDirection: 'row',
+                      alignItems: 'center'
+                    }}>
                       {word.completed && (
                         <button
                           onClick={() => updateWord(word.id, { completed: false })}
                           style={{
-                            background: 'none',
-                            border: '2px solid #ffc107',
-                            color: '#ffc107',
+                            background: 'linear-gradient(135deg, #ffc107, #ffca2c)',
+                            border: 'none',
+                            color: 'white',
                             cursor: 'pointer',
-                            fontSize: '12px',
-                            padding: '6px 10px',
-                            borderRadius: '6px',
-                            transition: 'all 0.2s ease'
+                            fontSize: 'clamp(10px, 3vw, 12px)',
+                            padding: 'clamp(6px, 2vw, 8px) clamp(10px, 3vw, 12px)',
+                            borderRadius: 'clamp(6px, 2vw, 8px)',
+                            transition: 'all 0.2s ease',
+                            whiteSpace: 'nowrap',
+                            flex: '1',
+                            fontWeight: '600',
+                            boxShadow: '0 2px 6px rgba(255, 193, 7, 0.3)'
                           }}
                           onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = '#ffc107';
-                            e.currentTarget.style.color = 'white';
+                            e.currentTarget.style.transform = 'translateY(-1px)';
+                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 193, 7, 0.4)';
                           }}
                           onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                            e.currentTarget.style.color = '#ffc107';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 2px 6px rgba(255, 193, 7, 0.3)';
                           }}
                         >
-                          🔄 완료해제
+                          🔄 재학습
                         </button>
                       )}
                       <button
@@ -398,43 +732,73 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
                           }
                         }}
                         style={{
-                          background: 'none',
-                          border: '2px solid #dc3545',
-                          color: '#dc3545',
+                          background: 'linear-gradient(135deg, #dc3545, #e74c3c)',
+                          border: 'none',
+                          color: 'white',
                           cursor: 'pointer',
-                          fontSize: '14px',
-                          padding: '8px 12px',
-                          borderRadius: '6px',
-                          transition: 'all 0.2s ease'
+                          fontSize: 'clamp(11px, 3.5vw, 13px)',
+                          padding: 'clamp(8px, 2.5vw, 10px) clamp(12px, 3.5vw, 14px)',
+                          borderRadius: 'clamp(6px, 2vw, 8px)',
+                          transition: 'all 0.2s ease',
+                          whiteSpace: 'nowrap',
+                          flex: '1',
+                          fontWeight: '600',
+                          boxShadow: '0 2px 6px rgba(220, 53, 69, 0.3)'
                         }}
                         onMouseOver={(e) => {
-                          e.currentTarget.style.backgroundColor = '#dc3545';
-                          e.currentTarget.style.color = 'white';
+                          e.currentTarget.style.transform = 'translateY(-1px)';
+                          e.currentTarget.style.boxShadow = '0 4px 12px rgba(220, 53, 69, 0.4)';
                         }}
                         onMouseOut={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                          e.currentTarget.style.color = '#dc3545';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = '0 2px 6px rgba(220, 53, 69, 0.3)';
                         }}
                       >
                         🗑️ 삭제
                       </button>
                     </div>
                   </div>
-                ))}
+                )) : (
+                  <div style={{
+                    textAlign: 'center',
+                    padding: 'clamp(30px, 8vw, 40px) clamp(16px, 5vw, 20px)',
+                    color: '#6c757d'
+                  }}>
+                    <div style={{
+                      fontSize: 'clamp(24px, 8vw, 32px)',
+                      marginBottom: 'clamp(12px, 4vw, 16px)'
+                    }}>
+                      {wordFilter === 'completed' ? '🎉' : '📝'}
+                    </div>
+                    <p style={{
+                      fontSize: 'clamp(14px, 4vw, 16px)',
+                      marginBottom: '0',
+                      lineHeight: '1.4'
+                    }}>
+                      {wordFilter === 'completed'
+                        ? '아직 완료된 단어가 없습니다'
+                        : wordFilter === 'incomplete'
+                        ? '모든 단어를 완료했습니다!'
+                        : '표시할 단어가 없습니다'
+                      }
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div style={{
-                marginTop: '20px',
-                padding: '16px',
+                marginTop: 'clamp(12px, 4vw, 20px)',
+                padding: 'clamp(12px, 4vw, 16px)',
                 backgroundColor: '#fff3cd',
-                borderRadius: '8px',
+                borderRadius: 'clamp(6px, 2vw, 8px)',
                 border: '1px solid #ffeaa7',
                 textAlign: 'center'
               }}>
                 <p style={{
                   margin: 0,
-                  fontSize: '14px',
-                  color: '#856404'
+                  fontSize: 'clamp(12px, 3.5vw, 14px)',
+                  color: '#856404',
+                  lineHeight: '1.4'
                 }}>
                   💡 단어를 삭제하려면 삭제 버튼을 클릭하세요
                 </p>
@@ -443,12 +807,27 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
           ) : (
             <div style={{
               textAlign: 'center',
-              padding: '40px 20px',
+              padding: 'clamp(20px, 8vw, 40px) clamp(16px, 5vw, 20px)',
               color: '#6c757d'
             }}>
-              <div style={{ fontSize: '48px', marginBottom: '16px' }}>📚</div>
-              <p style={{ fontSize: '18px', marginBottom: '8px' }}>저장된 단어가 없습니다</p>
-              <p style={{ fontSize: '14px', marginBottom: '20px' }}>단어 추가 버튼을 눌러 첫 번째 단어를 추가하거나 예시 단어를 불러와보세요!</p>
+              <div style={{
+                fontSize: 'clamp(32px, 12vw, 48px)',
+                marginBottom: 'clamp(12px, 4vw, 16px)'
+              }}>📚</div>
+              <p style={{
+                fontSize: 'clamp(16px, 5vw, 18px)',
+                marginBottom: 'clamp(6px, 2vw, 8px)',
+                lineHeight: '1.4'
+              }}>
+                저장된 단어가 없습니다
+              </p>
+              <p style={{
+                fontSize: 'clamp(12px, 3.5vw, 14px)',
+                marginBottom: 'clamp(16px, 5vw, 20px)',
+                lineHeight: '1.4'
+              }}>
+                단어 추가 버튼을 눌러 첫 번째 단어를 추가하거나 예시 단어를 불러와보세요!
+              </p>
 
               <button
                 onClick={() => {
@@ -456,14 +835,15 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
                   setIsWordListModalOpen(false);
                 }}
                 style={{
-                  padding: '12px 24px',
-                  fontSize: '16px',
+                  padding: 'clamp(10px, 3vw, 12px) clamp(20px, 6vw, 24px)',
+                  fontSize: 'clamp(14px, 4vw, 16px)',
                   backgroundColor: '#28a745',
                   color: 'white',
                   border: 'none',
-                  borderRadius: '8px',
+                  borderRadius: 'clamp(6px, 2vw, 8px)',
                   cursor: 'pointer',
-                  transition: 'all 0.3s ease'
+                  transition: 'all 0.3s ease',
+                  whiteSpace: 'nowrap'
                 }}
                 onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#218838'}
                 onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#28a745'}
@@ -479,7 +859,7 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
         isOpen={isAddWordModalOpen}
         onClose={() => setIsAddWordModalOpen(false)}
         title="➕ 단어 추가"
-        width="500px"
+        width="min(500px, 95vw)"
       >
         <AddWordModal onAddWord={addWord} />
       </Modal>

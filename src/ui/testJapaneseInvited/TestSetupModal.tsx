@@ -25,35 +25,38 @@ export const TestSetupModal = ({ words, onBack, onStartTest }: TestSetupModalPro
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      height: '100vh',
-      gap: '30px',
-      padding: '20px'
+      minHeight: '100dvh',
+      gap: 'clamp(20px, 6vw, 30px)',
+      padding: 'clamp(16px, 5vw, 20px)',
+      overflowX: 'hidden'
     }}>
-      <h1 style={{ fontSize: '28px', marginBottom: '20px' }}>
+      <h1 style={{ fontSize: 'clamp(20px, 6vw, 28px)', marginBottom: 'clamp(16px, 5vw, 20px)', lineHeight: '1.3', textAlign: 'center' }}>
         📚 테스트 설정
       </h1>
 
       <div style={{
         backgroundColor: '#f8f9fa',
-        padding: '30px',
-        borderRadius: '16px',
+        padding: 'clamp(20px, 6vw, 30px)',
+        borderRadius: 'clamp(12px, 4vw, 16px)',
         border: '2px solid #dee2e6',
-        minWidth: '400px',
+        width: '100%',
+        maxWidth: 'min(400px, 90vw)',
         textAlign: 'center'
       }}>
-        <div style={{ marginBottom: '30px' }}>
-          <h3 style={{ marginBottom: '15px', color: '#333' }}>문제 수 선택</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ marginBottom: 'clamp(20px, 6vw, 30px)' }}>
+          <h3 style={{ marginBottom: 'clamp(12px, 4vw, 15px)', color: '#333', fontSize: 'clamp(16px, 4.5vw, 18px)' }}>문제 수 선택</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(8px, 2.5vw, 10px)' }}>
             {questionOptions.map((option) => (
               <label
                 key={option.value}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  padding: '12px',
+                  padding: 'clamp(10px, 3vw, 12px)',
+                  minHeight: 'clamp(44px, 11vw, 48px)',
                   backgroundColor: selectedQuestionCount === option.value ? '#e3f2fd' : '#fff',
                   border: selectedQuestionCount === option.value ? '2px solid #2196f3' : '1px solid #ddd',
-                  borderRadius: '8px',
+                  borderRadius: 'clamp(6px, 2vw, 8px)',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
                 }}
@@ -64,17 +67,17 @@ export const TestSetupModal = ({ words, onBack, onStartTest }: TestSetupModalPro
                   value={option.value}
                   checked={selectedQuestionCount === option.value}
                   onChange={(e) => setSelectedQuestionCount(Number(e.target.value))}
-                  style={{ marginRight: '10px' }}
+                  style={{ marginRight: 'clamp(8px, 2.5vw, 10px)' }}
                 />
-                <span style={{ fontSize: '16px' }}>{option.label}</span>
+                <span style={{ fontSize: 'clamp(14px, 4vw, 16px)' }}>{option.label}</span>
               </label>
             ))}
           </div>
         </div>
 
-        <div style={{ marginBottom: '30px' }}>
-          <h3 style={{ marginBottom: '15px', color: '#333' }}>모드 선택</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ marginBottom: 'clamp(20px, 6vw, 30px)' }}>
+          <h3 style={{ marginBottom: 'clamp(12px, 4vw, 15px)', color: '#333', fontSize: 'clamp(16px, 4.5vw, 18px)' }}>모드 선택</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(8px, 2.5vw, 10px)' }}>
             <label
               style={{
                 display: 'flex',
@@ -95,8 +98,8 @@ export const TestSetupModal = ({ words, onBack, onStartTest }: TestSetupModalPro
                 style={{ marginRight: '10px' }}
               />
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: '16px', fontWeight: 'bold' }}>일반 모드</div>
-                <div style={{ fontSize: '12px', color: '#666' }}>시간 제한 없이 천천히 풀어보세요</div>
+                <div style={{ fontSize: 'clamp(14px, 4vw, 16px)', fontWeight: 'bold' }}>일반 모드</div>
+                <div style={{ fontSize: 'clamp(10px, 3vw, 12px)', color: '#666', lineHeight: '1.3' }}>시간 제한 없이 천천히 풀어보세요</div>
               </div>
             </label>
 
@@ -120,8 +123,8 @@ export const TestSetupModal = ({ words, onBack, onStartTest }: TestSetupModalPro
                 style={{ marginRight: '10px' }}
               />
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: '16px', fontWeight: 'bold' }}>⏰ 타임어택 모드</div>
-                <div style={{ fontSize: '12px', color: '#666' }}>문제당 5초의 시간 제한이 있습니다</div>
+                <div style={{ fontSize: 'clamp(14px, 4vw, 16px)', fontWeight: 'bold' }}>⏰ 타임어택 모드</div>
+                <div style={{ fontSize: 'clamp(10px, 3vw, 12px)', color: '#666', lineHeight: '1.3' }}>문제당 5초의 시간 제한이 있습니다</div>
               </div>
             </label>
           </div>
@@ -131,15 +134,16 @@ export const TestSetupModal = ({ words, onBack, onStartTest }: TestSetupModalPro
           onClick={() => onStartTest(selectedQuestionCount, timeAttack)}
           style={{
             width: '100%',
-            padding: '15px',
-            fontSize: '18px',
+            padding: 'clamp(12px, 4vw, 15px)',
+            fontSize: 'clamp(16px, 4.5vw, 18px)',
             backgroundColor: '#007bff',
             color: 'white',
             border: 'none',
-            borderRadius: '8px',
+            borderRadius: 'clamp(6px, 2vw, 8px)',
             cursor: 'pointer',
             fontWeight: 'bold',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
+            minHeight: 'clamp(48px, 12vw, 56px)'
           }}
           onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#007bff'}
@@ -151,12 +155,14 @@ export const TestSetupModal = ({ words, onBack, onStartTest }: TestSetupModalPro
       <button
         onClick={onBack}
         style={{
-          padding: '10px 20px',
+          padding: 'clamp(8px, 2.5vw, 10px) clamp(16px, 5vw, 20px)',
           backgroundColor: '#6c757d',
           color: 'white',
           border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer'
+          borderRadius: 'clamp(4px, 1.5vw, 5px)',
+          cursor: 'pointer',
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          minHeight: 'clamp(40px, 10vw, 44px)'
         }}
       >
         돌아가기

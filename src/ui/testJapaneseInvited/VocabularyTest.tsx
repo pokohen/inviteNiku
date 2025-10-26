@@ -74,18 +74,22 @@ export const VocabularyTest = ({ words, onBack, onUpdateWord, questionCount, tim
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
-        gap: '20px'
+        minHeight: '100dvh',
+        gap: 'clamp(16px, 5vw, 20px)',
+        padding: 'clamp(16px, 5vw, 20px)',
+        textAlign: 'center'
       }}>
-        <h2>테스트를 위해서는 최소 4개의 단어가 필요합니다</h2>
-        <p>현재 {words.length}개의 단어가 있습니다</p>
+        <h2 style={{ fontSize: 'clamp(18px, 5vw, 24px)', lineHeight: '1.3' }}>테스트를 위해서는 최소 4개의 단어가 필요합니다</h2>
+        <p style={{ fontSize: 'clamp(14px, 4vw, 16px)', lineHeight: '1.4' }}>현재 {words.length}개의 단어가 있습니다</p>
         <button onClick={onBack} style={{
-          padding: '10px 20px',
+          padding: 'clamp(8px, 2.5vw, 10px) clamp(16px, 5vw, 20px)',
           backgroundColor: '#6c757d',
           color: 'white',
           border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer'
+          borderRadius: 'clamp(4px, 1.5vw, 5px)',
+          cursor: 'pointer',
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          minHeight: 'clamp(40px, 10vw, 44px)'
         }}>
           돌아가기
         </button>
@@ -178,7 +182,7 @@ export const VocabularyTest = ({ words, onBack, onUpdateWord, questionCount, tim
     const isPerfectScore = score === questions.length;
 
     return (
-      <div style={{ margin: '0 auto', textAlign: 'center', padding: '20px', position: 'relative' }}>
+      <div style={{ margin: '0 auto', textAlign: 'center', padding: 'clamp(16px, 5vw, 20px)', position: 'relative', maxWidth: '100vw', overflowX: 'hidden' }}>
         {isPerfectScore && (
           <Confetti
             width={window.innerWidth}
@@ -195,47 +199,48 @@ export const VocabularyTest = ({ words, onBack, onUpdateWord, questionCount, tim
             }}
           />
         )}
-        <h2>📚 나만의 단어장 테스트 완료! {timeAttack && '⏰ 타임어택'}</h2>
+        <h2 style={{ fontSize: 'clamp(18px, 5vw, 24px)', lineHeight: '1.3', margin: '0 0 clamp(12px, 3vw, 16px) 0' }}>📚 나만의 단어장 테스트 완료! {timeAttack && '⏰ 타임어택'}</h2>
         {isPerfectScore && (
-          <div style={{ marginTop: '10px', fontSize: '20px', color: '#28a745', fontWeight: 'bold' }}>
+          <div style={{ marginTop: 'clamp(8px, 2.5vw, 10px)', fontSize: 'clamp(16px, 5vw, 20px)', color: '#28a745', fontWeight: 'bold', lineHeight: '1.3' }}>
             🎉 완벽합니다! 100점입니다! 🎉
           </div>
         )}
-        <Flex justify={'center'} align={'center'} gap={'10px'} style={{ marginTop: '10px', fontSize: '18px' }}>
-          <p><span style={{ fontSize: '14px'}}>총 점수 : </span> {score} / {questions.length}</p>
+        <Flex justify={'center'} align={'center'} gap={'clamp(8px, 2.5vw, 10px)'} style={{ marginTop: 'clamp(8px, 2.5vw, 10px)', fontSize: 'clamp(14px, 4vw, 18px)', flexWrap: 'wrap' }}>
+          <p><span style={{ fontSize: 'clamp(12px, 3vw, 14px)'}}>총 점수 : </span> {score} / {questions.length}</p>
           <div style={{ width: '1px', height: '16px', backgroundColor: '#ccc', borderRadius: '9999px'}}></div>
-          <p><span style={{ fontSize: '14px'}}>정답률 : </span> {((score / questions.length) * 100).toFixed(1)}%</p>
+          <p><span style={{ fontSize: 'clamp(12px, 3vw, 14px)'}}>정답률 : </span> {((score / questions.length) * 100).toFixed(1)}%</p>
         </Flex>
 
         {uncompletedWords.length > 0 && (
           <div style={{
-            marginTop: '20px',
-            padding: '15px',
+            marginTop: 'clamp(16px, 5vw, 20px)',
+            padding: 'clamp(12px, 4vw, 15px)',
             backgroundColor: '#fff3cd',
             border: '1px solid #ffeaa7',
-            borderRadius: '8px',
-            maxWidth: '600px',
-            margin: '20px auto 0'
+            borderRadius: 'clamp(6px, 2vw, 8px)',
+            maxWidth: 'min(600px, 90vw)',
+            margin: 'clamp(16px, 5vw, 20px) auto 0'
           }}>
             <div style={{
-              fontSize: '16px',
+              fontSize: 'clamp(14px, 4vw, 16px)',
               fontWeight: 'bold',
               color: '#856404',
-              marginBottom: '10px'
+              marginBottom: 'clamp(8px, 2.5vw, 10px)'
             }}>
               🔄 완료 해제된 단어 ({uncompletedWords.length}개)
             </div>
             <div style={{
-              fontSize: '14px',
+              fontSize: 'clamp(12px, 3.5vw, 14px)',
               color: '#856404',
-              marginBottom: '10px'
+              marginBottom: 'clamp(8px, 2.5vw, 10px)',
+              lineHeight: '1.4'
             }}>
               다음 단어들이 오답으로 인해 완료 상태에서 해제되어 다시 학습모드에 나타납니다:
             </div>
             <div style={{
               display: 'flex',
               flexWrap: 'wrap',
-              gap: '8px'
+              gap: 'clamp(6px, 2vw, 8px)'
             }}>
               {uncompletedWords.map((word, index) => (
                 <span
@@ -243,9 +248,9 @@ export const VocabularyTest = ({ words, onBack, onUpdateWord, questionCount, tim
                   style={{
                     backgroundColor: '#ffc107',
                     color: 'white',
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    fontSize: '12px',
+                    padding: 'clamp(3px, 1vw, 4px) clamp(6px, 2vw, 8px)',
+                    borderRadius: 'clamp(3px, 1vw, 4px)',
+                    fontSize: 'clamp(10px, 3vw, 12px)',
                     fontWeight: 'bold'
                   }}
                 >
@@ -258,13 +263,13 @@ export const VocabularyTest = ({ words, onBack, onUpdateWord, questionCount, tim
         )}
 
         <Collapse
-          style={{ marginTop: '20px', width: '80vw', margin: '0 auto' }}
+          style={{ marginTop: 'clamp(16px, 5vw, 20px)', width: 'min(80vw, 600px)', margin: '0 auto' }}
           defaultActiveKey={wrongAnswers.length > 0 ? ['2'] : []}
           expandIconPosition={'end'}
           items={[
             {
               key: '1',
-              label: (<span style={{ color: '#28a745', fontWeight: 600, fontSize: '15px'}}>맞춘 문제 ({correctAnswers.length}개)</span>),
+              label: (<span style={{ color: '#28a745', fontWeight: 600, fontSize: 'clamp(13px, 3.5vw, 15px)'}}>맞춘 문제 ({correctAnswers.length}개)</span>),
               children: (
                 <Row>
                   {correctAnswers.length > 0 ? (
@@ -311,7 +316,7 @@ export const VocabularyTest = ({ words, onBack, onUpdateWord, questionCount, tim
             },
             {
               key: '2',
-              label: (<span style={{ color: '#dc3545', fontWeight: 600, fontSize: '15px'}}>틀린 문제 ({wrongAnswers.length}개)</span>),
+              label: (<span style={{ color: '#dc3545', fontWeight: 600, fontSize: 'clamp(13px, 3.5vw, 15px)'}}>틀린 문제 ({wrongAnswers.length}개)</span>),
               children: (
                 <Row>
                   {wrongAnswers.length > 0 ? (
@@ -359,11 +364,11 @@ export const VocabularyTest = ({ words, onBack, onUpdateWord, questionCount, tim
           ]}
         />
 
-        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginTop: '20px' }}>
-          <button onClick={resetTest} style={{ padding: '10px 20px', backgroundColor: 'transparent', color: '#007bff', border: 'none', borderRadius: '5px' }}>
+        <div style={{ display: 'flex', gap: 'clamp(12px, 4vw, 15px)', justifyContent: 'center', marginTop: 'clamp(16px, 5vw, 20px)', flexWrap: 'wrap' }}>
+          <button onClick={resetTest} style={{ padding: 'clamp(8px, 2.5vw, 10px) clamp(16px, 5vw, 20px)', backgroundColor: 'transparent', color: '#007bff', border: 'none', borderRadius: 'clamp(4px, 1.5vw, 5px)', fontSize: 'clamp(12px, 3.5vw, 14px)', minHeight: 'clamp(40px, 10vw, 44px)', cursor: 'pointer' }}>
             다시 풀기
           </button>
-          <button onClick={onBack} style={{ padding: '10px 20px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '5px' }}>
+          <button onClick={onBack} style={{ padding: 'clamp(8px, 2.5vw, 10px) clamp(16px, 5vw, 20px)', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: 'clamp(4px, 1.5vw, 5px)', fontSize: 'clamp(12px, 3.5vw, 14px)', minHeight: 'clamp(40px, 10vw, 44px)', cursor: 'pointer' }}>
             단어장으로 돌아가기
           </button>
         </div>
@@ -375,14 +380,20 @@ export const VocabularyTest = ({ words, onBack, onUpdateWord, questionCount, tim
     <div style={{
       margin: '0 auto',
       textAlign: 'center',
-      padding: '20px'
+      padding: 'clamp(16px, 5vw, 20px)',
+      minHeight: '100dvh',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      gap: 'clamp(16px, 4vw, 20px)'
     }}>
-      <div style={{ marginBottom: '20px' }}>
-        문제 {currentQuestionIndex + 1} / {questions.length}
+      <h2 style={{ marginBottom: 'clamp(16px, 4vw, 20px)', fontSize: 'clamp(18px, 5vw, 24px)', lineHeight: '1.3' }}>📚 나만의 단어장 테스트 {timeAttack && '(타임어택)'}</h2>
+      <div>
+        <span style={{ fontSize: 'clamp(14px, 4vw, 16px)' }}>문제 {currentQuestionIndex + 1} / {questions.length}</span>
         {timeAttack && (
           <div style={{
-            marginTop: '10px',
-            fontSize: '24px',
+            marginTop: 'clamp(8px, 2.5vw, 10px)',
+            fontSize: 'clamp(20px, 6vw, 24px)',
             fontWeight: 'bold',
             color: timeLeft <= 2 ? '#dc3545' : timeLeft <= 3 ? '#ff6b6b' : '#28a745'
           }}>
@@ -390,32 +401,34 @@ export const VocabularyTest = ({ words, onBack, onUpdateWord, questionCount, tim
           </div>
         )}
       </div>
-      <h2 style={{ marginBottom: '20px' }}>📚 나만의 단어장 테스트 {timeAttack && '(타임어택)'}</h2>
-      <div style={{ marginBottom: '20px' }}>
+      <div style={{ marginBottom: 'clamp(16px, 4vw, 20px)', fontSize: 'clamp(14px, 4vw, 16px)', lineHeight: '1.4' }}>
         아래의 일본어에 맞는 한국어 뜻을 선택해주세요.
       </div>
-      <div style={{ fontSize: '48px', marginBottom: '20px' }}>
-        {currentWord?.japanese}
-      </div>
-      {currentWord?.yomikana && (
-        <div style={{
-          fontSize: '20px',
-          color: '#666',
-          marginBottom: '20px',
-          fontStyle: 'italic'
-        }}>
-          ({currentWord.yomikana})
+      <div>
+        <div style={{ fontSize: 'clamp(40px, 10vw, 48px)', lineHeight: '1.2' }}>
+          {currentWord?.japanese}
         </div>
-      )}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', maxWidth: '400px', margin: '0 auto' }}>
+        <div style={{
+          fontSize: 'clamp(16px, 5vw, 20px)',
+          color: '#666',
+          marginBottom: 'clamp(8px, 2vw, 12px)',
+          fontStyle: 'italic',
+          lineHeight: '1.3',
+          minHeight: 'clamp(20px, 6vw, 24px)'
+        }}>
+          {currentWord?.yomikana ? `(${currentWord.yomikana})` : ''}
+        </div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(12px, 4vw, 15px)', maxWidth: 'min(500px, 90vw)' }}>
         {choices.map((choice, index) => (
           <button
             key={index}
             onClick={() => handleAnswerSelect(choice)}
             disabled={selectedAnswer !== '' || (timeAttack && timeLeft === 0)}
             style={{
-              padding: '15px 20px',
-              fontSize: '18px',
+              padding: 'clamp(12px, 4vw, 15px) clamp(16px, 5vw, 20px)',
+              fontSize: 'clamp(14px, 4vw, 18px)',
+              minHeight: 'clamp(60px, 15vw, 80px)',
               backgroundColor: selectedAnswer === choice
                 ? (choice === correctAnswer ? '#28a745' : '#dc3545')
                 : (selectedAnswer !== '' && choice === correctAnswer)
@@ -427,9 +440,11 @@ export const VocabularyTest = ({ words, onBack, onUpdateWord, questionCount, tim
                 : '#007bff',
               color: 'white',
               border: 'none',
-              borderRadius: '8px',
+              borderRadius: 'clamp(6px, 2vw, 8px)',
               cursor: (selectedAnswer !== '' || (timeAttack && timeLeft === 0)) ? 'not-allowed' : 'pointer',
-              transition: 'all 0.1s ease'
+              transition: 'all 0.1s ease',
+              lineHeight: '1.3',
+              wordBreak: 'keep-all'
             }}
           >
             {choice}
@@ -440,12 +455,15 @@ export const VocabularyTest = ({ words, onBack, onUpdateWord, questionCount, tim
       <button
         onClick={onBack}
         style={{
-          marginTop: '30px',
-          padding: '10px 20px',
+          marginTop: 'clamp(24px, 7vw, 30px)',
+          padding: 'clamp(8px, 2.5vw, 10px) clamp(16px, 5vw, 20px)',
           backgroundColor: '#6c757d',
           color: 'white',
           border: 'none',
-          borderRadius: '5px'
+          borderRadius: 'clamp(4px, 1.5vw, 5px)',
+          fontSize: 'clamp(12px, 3.5vw, 14px)',
+          minHeight: 'clamp(40px, 10vw, 44px)',
+          cursor: 'pointer'
         }}
       >
         단어장으로 돌아가기
