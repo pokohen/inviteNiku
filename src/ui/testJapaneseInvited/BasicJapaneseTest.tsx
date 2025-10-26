@@ -7,10 +7,11 @@ import { katakanaToKorean } from '@/shared/katakana';
 interface BasicJapaneseTestProps {
   type: 'hiragana' | 'katakana';
   questionCount: number;
+  timeAttack: boolean;
   onBackToSelect: () => void;
 }
 
-export function BasicJapaneseTest({ type, questionCount, onBackToSelect }: BasicJapaneseTestProps) {
+export function BasicJapaneseTest({ type, questionCount, timeAttack, onBackToSelect }: BasicJapaneseTestProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [score, setScore] = useState(0);
@@ -19,6 +20,8 @@ export function BasicJapaneseTest({ type, questionCount, onBackToSelect }: Basic
   const [isFinished, setIsFinished] = useState(false);
   const [questions, setQuestions] = useState<string[]>([]);
   const [choices, setChoices] = useState<string[]>([]);
+  const [timeLeft, setTimeLeft] = useState(5);
+  const [timerActive, setTimerActive] = useState(false);
 
   const characterMap = type === 'hiragana' ? hiraganaToKorean : katakanaToKorean;
   const testTitle = type === 'hiragana' ? '히라가나' : '가타카나';
@@ -44,14 +47,55 @@ export function BasicJapaneseTest({ type, questionCount, onBackToSelect }: Basic
       const currentJapanese = questions[currentQuestionIndex];
       const correctAnswer = characterMap[currentJapanese as keyof typeof characterMap];
       setChoices(generateChoices(correctAnswer));
+
+      if (timeAttack) {
+        setTimeLeft(5);
+        setTimerActive(true);
+      }
     }
-  }, [questions, currentQuestionIndex, characterMap]);
+  }, [questions, currentQuestionIndex, characterMap, timeAttack]);
+
+  // 타임어택 타이머
+  useEffect(() => {
+    if (timeAttack && timerActive && timeLeft > 0) {
+      const timer = setTimeout(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (timeAttack && timerActive && timeLeft === 0) {
+      // 시간 초과 시 틀린 답 처리
+      handleTimeUp();
+    }
+  }, [timeLeft, timerActive, timeAttack]);
+
+  const handleTimeUp = () => {
+    setTimerActive(false);
+    const currentJapanese = questions[currentQuestionIndex];
+    setWrongAnswers([...wrongAnswers, currentJapanese]);
+
+    // 시간 초과 시 정답을 표시하기 위해 빈 문자열 대신 특별한 값 설정
+    setSelectedAnswer('TIME_UP');
+
+    setTimeout(() => {
+      if (currentQuestionIndex + 1 < questions.length) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setSelectedAnswer('');
+      } else {
+        setIsFinished(true);
+      }
+    }, 1000);
+  };
 
   const currentJapanese = questions[currentQuestionIndex];
   const correctAnswer = characterMap[currentJapanese as keyof typeof characterMap];
 
   const handleAnswerSelect = (selectedChoice: string) => {
+    if (selectedAnswer !== '') return; // 이미 답을 선택했으면 무시
+
     setSelectedAnswer(selectedChoice);
+    if (timeAttack) {
+      setTimerActive(false); // 타이머 멈춤
+    }
 
     if (selectedChoice === correctAnswer) {
       setScore(score + 1);
@@ -77,6 +121,8 @@ export function BasicJapaneseTest({ type, questionCount, onBackToSelect }: Basic
     setWrongAnswers([]);
     setCorrectAnswers([]);
     setIsFinished(false);
+    setTimeLeft(5);
+    setTimerActive(false);
     const questionList = Object.keys(characterMap);
     const shuffledQuestions = questionList.sort(() => Math.random() - 0.5);
 
@@ -105,7 +151,7 @@ export function BasicJapaneseTest({ type, questionCount, onBackToSelect }: Basic
             }}
           />
         )}
-        <h2>{testTitle} 테스트 완료!</h2>
+        <h2>{testTitle} 테스트 완료! {timeAttack && '⏰ 타임어택'}</h2>
         {isPerfectScore && (
           <div style={{ marginTop: '10px', fontSize: '20px', color: '#28a745', fontWeight: 'bold' }}>
             🎉 すばらしい！100점でした！ 🎉
@@ -211,8 +257,18 @@ export function BasicJapaneseTest({ type, questionCount, onBackToSelect }: Basic
     }}>
       <div style={{ marginBottom: '20px' }}>
         문제 {currentQuestionIndex + 1} / {questions.length}
+        {timeAttack && (
+          <div style={{
+            marginTop: '10px',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            color: timeLeft <= 2 ? '#dc3545' : timeLeft <= 3 ? '#ff6b6b' : '#28a745'
+          }}>
+            ⏰ {timeLeft}초
+          </div>
+        )}
       </div>
-      <h2 style={{ marginBottom: '20px' }}>{testTitle} 테스트</h2>
+      <h2 style={{ marginBottom: '20px' }}>{testTitle} 테스트 {timeAttack && '(타임어택)'}</h2>
       <div style={{ marginBottom: '20px' }}>
         아래의 글자를 보고 맞는 한글을 선택해주세요.
       </div>
@@ -224,19 +280,23 @@ export function BasicJapaneseTest({ type, questionCount, onBackToSelect }: Basic
           <button
             key={index}
             onClick={() => handleAnswerSelect(choice)}
-            disabled={selectedAnswer !== ''}
+            disabled={selectedAnswer !== '' || (timeAttack && timeLeft === 0)}
             style={{
               padding: '15px 20px',
               fontSize: '18px',
               backgroundColor: selectedAnswer === choice
                 ? (choice === correctAnswer ? '#28a745' : '#dc3545')
-                : selectedAnswer !== '' && choice === correctAnswer
+                : (selectedAnswer !== '' && choice === correctAnswer)
                 ? '#28a745'
+                : (selectedAnswer === 'TIME_UP' && choice === correctAnswer)
+                ? '#28a745'
+                : (timeAttack && timeLeft === 0)
+                ? '#6c757d'
                 : '#007bff',
               color: 'white',
               border: 'none',
               borderRadius: '8px',
-              cursor: selectedAnswer !== '' ? 'not-allowed' : 'pointer',
+              cursor: (selectedAnswer !== '' || (timeAttack && timeLeft === 0)) ? 'not-allowed' : 'pointer',
               transition: 'all 0.1s ease'
             }}
           >
