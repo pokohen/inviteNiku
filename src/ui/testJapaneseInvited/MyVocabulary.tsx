@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { StudyMode } from './StudyMode.tsx';
 import { VocabularyTest } from './VocabularyTest.tsx';
+import { TestSetupModal } from './TestSetupModal.tsx';
 import { Modal } from '../common/Modal.tsx';
 import { AddWordModal } from './AddWordModal.tsx';
+import { exampleWord } from '../../shared/exampleWord.ts';
 
 export interface VocabularyWord {
   id: string;
@@ -10,6 +12,7 @@ export interface VocabularyWord {
   yomikana?: string; // 요미카타 (선택사항)
   korean: string;
   dateAdded: string;
+  completed?: boolean; // 학습 완료 여부
 }
 
 interface MyVocabularyProps {
@@ -17,10 +20,12 @@ interface MyVocabularyProps {
 }
 
 export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
-  const [currentMode, setCurrentMode] = useState<'main' | 'study' | 'test'>('main');
+  const [currentMode, setCurrentMode] = useState<'main' | 'study' | 'test' | 'test-setup'>('main');
   const [words, setWords] = useState<VocabularyWord[]>([]);
   const [isWordListModalOpen, setIsWordListModalOpen] = useState(false);
   const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(false);
+  const [testQuestionCount, setTestQuestionCount] = useState(0);
+  const [testTimeAttack, setTestTimeAttack] = useState(false);
 
   useEffect(() => {
     const savedWords = localStorage.getItem('my-vocabulary');
@@ -52,6 +57,23 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
     saveWords(updatedWords);
   };
 
+  const updateWord = (id: string, updates: Partial<VocabularyWord>) => {
+    const updatedWords = words.map(word =>
+      word.id === id ? { ...word, ...updates } : word
+    );
+    saveWords(updatedWords);
+  };
+
+  const addExampleWords = () => {
+    const today = new Date().toLocaleDateString();
+    const vocabularyWords: VocabularyWord[] = exampleWord.map(word => ({
+      ...word,
+      dateAdded: today,
+      completed: false
+    }));
+    saveWords(vocabularyWords);
+  };
+
   const handleBackToMain = () => {
     setCurrentMode('main');
   };
@@ -61,6 +83,21 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
       <StudyMode
         words={words}
         onBack={handleBackToMain}
+        onUpdateWord={updateWord}
+      />
+    );
+  }
+
+  if (currentMode === 'test-setup') {
+    return (
+      <TestSetupModal
+        words={words}
+        onBack={handleBackToMain}
+        onStartTest={(questionCount, timeAttack) => {
+          setTestQuestionCount(questionCount);
+          setTestTimeAttack(timeAttack);
+          setCurrentMode('test');
+        }}
       />
     );
   }
@@ -70,6 +107,9 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
       <VocabularyTest
         words={words}
         onBack={handleBackToMain}
+        onUpdateWord={updateWord}
+        questionCount={testQuestionCount}
+        timeAttack={testTimeAttack}
       />
     );
   }
@@ -142,7 +182,15 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
         </button>
 
         <button
-          onClick={() => setCurrentMode('test')}
+          onClick={() => {
+            if (words.length >= 40) {
+              setCurrentMode('test-setup');
+            } else {
+              setTestQuestionCount(0);
+              setTestTimeAttack(false);
+              setCurrentMode('test');
+            }
+          }}
           disabled={words.length < 4}
           style={{
             padding: '20px 40px',
@@ -170,29 +218,27 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
         </button>
       </div>
 
-      {words.length > 0 && (
-        <button
-          onClick={() => setIsWordListModalOpen(true)}
-          style={{
-            marginTop: '20px',
-            padding: '15px 30px',
-            fontSize: '16px',
-            backgroundColor: '#6f42c1',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            transition: 'all 0.3s ease',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#5a359a'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6f42c1'}
-        >
-          📋 단어 목록 보기 ({words.length}개)
-        </button>
-      )}
+      <button
+        onClick={() => setIsWordListModalOpen(true)}
+        style={{
+          marginTop: '20px',
+          padding: '15px 30px',
+          fontSize: '16px',
+          backgroundColor: '#6f42c1',
+          color: 'white',
+          border: 'none',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}
+        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#5a359a'}
+        onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6f42c1'}
+      >
+        📋 단어 목록 보기 ({words.length}개)
+      </button>
 
       {words.length < 4 && words.length > 0 && (
         <p style={{ fontSize: '14px', color: '#ffc107', textAlign: 'center' }}>
@@ -297,38 +343,82 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
                       <div style={{ fontSize: '16px', color: '#495057' }}>
                         → {word.korean}
                       </div>
-                      <div style={{ fontSize: '12px', color: '#6c757d', marginTop: '4px' }}>
-                        추가일: {word.dateAdded}
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '12px',
+                        color: '#6c757d',
+                        marginTop: '4px'
+                      }}>
+                        <span>추가일: {word.dateAdded}</span>
+                        {word.completed && (
+                          <span style={{
+                            backgroundColor: '#28a745',
+                            color: 'white',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            fontSize: '10px'
+                          }}>
+                            ✅ 완료됨
+                          </span>
+                        )}
                       </div>
                     </div>
-                    <button
-                      onClick={() => {
-                        if (window.confirm(`"${word.japanese}"를 삭제하시겠습니까?`)) {
-                          deleteWord(word.id);
-                        }
-                      }}
-                      style={{
-                        background: 'none',
-                        border: '2px solid #dc3545',
-                        color: '#dc3545',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        padding: '8px 12px',
-                        borderRadius: '6px',
-                        transition: 'all 0.2s ease',
-                        marginLeft: '16px'
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = '#dc3545';
-                        e.currentTarget.style.color = 'white';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.color = '#dc3545';
-                      }}
-                    >
-                      🗑️ 삭제
-                    </button>
+                    <div style={{ display: 'flex', gap: '8px', marginLeft: '16px' }}>
+                      {word.completed && (
+                        <button
+                          onClick={() => updateWord(word.id, { completed: false })}
+                          style={{
+                            background: 'none',
+                            border: '2px solid #ffc107',
+                            color: '#ffc107',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                            padding: '6px 10px',
+                            borderRadius: '6px',
+                            transition: 'all 0.2s ease'
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = '#ffc107';
+                            e.currentTarget.style.color = 'white';
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                            e.currentTarget.style.color = '#ffc107';
+                          }}
+                        >
+                          🔄 완료해제
+                        </button>
+                      )}
+                      <button
+                        onClick={() => {
+                          if (window.confirm(`"${word.japanese}"를 삭제하시겠습니까?`)) {
+                            deleteWord(word.id);
+                          }
+                        }}
+                        style={{
+                          background: 'none',
+                          border: '2px solid #dc3545',
+                          color: '#dc3545',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          padding: '8px 12px',
+                          borderRadius: '6px',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.backgroundColor = '#dc3545';
+                          e.currentTarget.style.color = 'white';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                          e.currentTarget.style.color = '#dc3545';
+                        }}
+                      >
+                        🗑️ 삭제
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -358,7 +448,28 @@ export const MyVocabulary = ({ onBackToSelect }: MyVocabularyProps) => {
             }}>
               <div style={{ fontSize: '48px', marginBottom: '16px' }}>📚</div>
               <p style={{ fontSize: '18px', marginBottom: '8px' }}>저장된 단어가 없습니다</p>
-              <p style={{ fontSize: '14px' }}>단어 추가 버튼을 눌러 첫 번째 단어를 추가해보세요!</p>
+              <p style={{ fontSize: '14px', marginBottom: '20px' }}>단어 추가 버튼을 눌러 첫 번째 단어를 추가하거나 예시 단어를 불러와보세요!</p>
+
+              <button
+                onClick={() => {
+                  addExampleWords();
+                  setIsWordListModalOpen(false);
+                }}
+                style={{
+                  padding: '12px 24px',
+                  fontSize: '16px',
+                  backgroundColor: '#28a745',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#218838'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#28a745'}
+              >
+                📝 예시 단어 50개 추가하기
+              </button>
             </div>
           )}
         </div>

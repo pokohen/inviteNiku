@@ -1,0 +1,60 @@
+interface Word {
+  id: string;
+  japanese: string;
+  yomikana: string;
+  korean: string;
+}
+
+export const exampleWord: Word[] =
+  [
+    {"id":"1761470100001","japanese":"空","yomikana":"そら","korean":"하늘"},
+    {"id":"1761470100002","japanese":"犬","yomikana":"いぬ","korean":"개"},
+    {"id":"1761470100003","japanese":"猫","yomikana":"ねこ","korean":"고양이"},
+    {"id":"1761470100004","japanese":"本","yomikana":"ほん","korean":"책"},
+    {"id":"1761470100005","japanese":"花","yomikana":"はな","korean":"꽃"},
+    {"id":"1761470100006","japanese":"友達","yomikana":"ともだち","korean":"친구"},
+    {"id":"1761470100007","japanese":"学校","yomikana":"がっこう","korean":"학교"},
+    {"id":"1761470100008","japanese":"先生","yomikana":"せんせい","korean":"선생님"},
+    {"id":"1761470100009","japanese":"食べる","yomikana":"たべる","korean":"먹다"},
+    {"id":"1761470100010","japanese":"飲む","yomikana":"のむ","korean":"마시다"},
+    {"id":"1761470100011","japanese":"歩く","yomikana":"あるく","korean":"걷다"},
+    {"id":"1761470100012","japanese":"走る","yomikana":"はしる","korean":"달리다"},
+    {"id":"1761470100013","japanese":"寝る","yomikana":"ねる","korean":"자다"},
+    {"id":"1761470100014","japanese":"起きる","yomikana":"おきる","korean":"일어나다"},
+    {"id":"1761470100015","japanese":"車","yomikana":"くるま","korean":"자동차"},
+    {"id":"1761470100016","japanese":"電車","yomikana":"でんしゃ","korean":"전철"},
+    {"id":"1761470100017","japanese":"駅","yomikana":"えき","korean":"역"},
+    {"id":"1761470100018","japanese":"家","yomikana":"いえ","korean":"집"},
+    {"id":"1761470100019","japanese":"部屋","yomikana":"へや","korean":"방"},
+    {"id":"1761470100020","japanese":"机","yomikana":"つくえ","korean":"책상"},
+    {"id":"1761470100021","japanese":"椅子","yomikana":"いす","korean":"의자"},
+    {"id":"1761470100022","japanese":"雨","yomikana":"あめ","korean":"비"},
+    {"id":"1761470100023","japanese":"雪","yomikana":"ゆき","korean":"눈"},
+    {"id":"1761470100024","japanese":"風","yomikana":"かぜ","korean":"바람"},
+    {"id":"1761470100025","japanese":"天気","yomikana":"てんき","korean":"날씨"},
+    {"id":"1761470100026","japanese":"青","yomikana":"あお","korean":"파랑"},
+    {"id":"1761470100027","japanese":"赤","yomikana":"あか","korean":"빨강"},
+    {"id":"1761470100028","japanese":"黒","yomikana":"くろ","korean":"검정"},
+    {"id":"1761470100029","japanese":"白","yomikana":"しろ","korean":"하양"},
+    {"id":"1761470100030","japanese":"魚","yomikana":"さかな","korean":"물고기"},
+    {"id":"1761470100031","japanese":"肉","yomikana":"にく","korean":"고기"},
+    {"id":"1761470100032","japanese":"卵","yomikana":"たまご","korean":"계란"},
+    {"id":"1761470100033","japanese":"牛乳","yomikana":"ぎゅうにゅう","korean":"우유"},
+    {"id":"1761470100034","japanese":"果物","yomikana":"くだもの","korean":"과일"},
+    {"id":"1761470100035","japanese":"野菜","yomikana":"やさい","korean":"야채"},
+    {"id":"1761470100036","japanese":"時間","yomikana":"じかん","korean":"시간"},
+    {"id":"1761470100037","japanese":"今","yomikana":"いま","korean":"지금"},
+    {"id":"1761470100038","japanese":"明日","yomikana":"あした","korean":"내일"},
+    {"id":"1761470100039","japanese":"昨日","yomikana":"きのう","korean":"어제"},
+    {"id":"1761470100040","japanese":"朝","yomikana":"あさ","korean":"아침"},
+    {"id":"1761470100041","japanese":"夜","yomikana":"よる","korean":"밤"},
+    {"id":"1761470100042","japanese":"昼","yomikana":"ひる","korean":"낮"},
+    {"id":"1761470100043","japanese":"勉強","yomikana":"べんきょう","korean":"공부"},
+    {"id":"1761470100044","japanese":"仕事","yomikana":"しごと","korean":"일"},
+    {"id":"1761470100045","japanese":"旅行","yomikana":"りょこう","korean":"여행"},
+    {"id":"1761470100046","japanese":"買う","yomikana":"かう","korean":"사다"},
+    {"id":"1761470100047","japanese":"見る","yomikana":"みる","korean":"보다"},
+    {"id":"1761470100048","japanese":"聞く","yomikana":"きく","korean":"듣다"},
+    {"id":"1761470100049","japanese":"話す","yomikana":"はなす","korean":"말하다"},
+    {"id":"1761470100050","japanese":"書く","yomikana":"かく","korean":"쓰다"}
+  ];
